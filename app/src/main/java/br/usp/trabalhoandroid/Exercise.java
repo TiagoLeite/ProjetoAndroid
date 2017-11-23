@@ -19,7 +19,7 @@ public class Exercise
         int i, j, sizeA, sizeB;
         double dist;
         sizeA = seriesA.length;
-        sizeB =seriesB.length;
+        sizeB = seriesB.length;
 
         double dtw[][] = new double[sizeA+1][sizeB+1];
 
