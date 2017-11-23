@@ -9,4 +9,10 @@
         android:id="@+id/btnRecord"
         android:text="RECORD EXERCISE"/>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnRead"
+        android:text="READ FILE"/>
+
 </LinearLayout>

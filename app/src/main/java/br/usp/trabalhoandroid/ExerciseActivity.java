@@ -18,8 +18,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 
 public class ExerciseActivity extends AppCompatActivity implements SensorEventListener
@@ -27,10 +30,12 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private Button btnRecord;
+    private Button btnRead;
     private BufferedWriter bufferedWriter;
     private String fileName = "datasensor.txt";
 
     private static final int REQUEST_CODE = 0x11;
+    private boolean isRecording = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,13 +55,42 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
             @Override
             public void onClick(View view)
             {
-                setupRecordSensorValues();
+                handleRecording();
             }
         });
+
+        btnRead = findViewById(R.id.btnRead);
+        btnRead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    readFile();
+                } catch (Exception e) {
+                    Log.d("debug", e.getMessage());
+                }
+            }
+        });
+
 
         String[] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE"};
         ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE); // without sdk version check
 
+    }
+
+    private void handleRecording()
+    {
+        if (isRecording)
+        {
+            stopRecordSensorValues();
+            isRecording = false;
+            Toast.makeText(this, "Stopped Recording!", Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            startRecordSensorValues();
+            Toast.makeText(this, "Recording!", Toast.LENGTH_LONG).show();
+            isRecording = true;
+        }
     }
 
     @Override
@@ -76,7 +110,7 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
         }
     }
 
-    private boolean setupRecordSensorValues()
+    private boolean startRecordSensorValues()
     {
         try
         {
@@ -84,12 +118,6 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
                              (new FileWriter
                              (new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), fileName)));
             mSensorManager.registerListener( this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-            btnRecord.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    stopRecordSensorValues();
-                }
-            });
             Log.d("debug", "STARTED REC");
             return true;
         }
@@ -114,6 +142,22 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
         {
             Log.d("debug", "Stop REC");
             mSensorManager.unregisterListener(this);
+        }
+    }
+
+    public void readFile() throws Exception
+    {
+        String line;
+        BufferedReader bufferedReader = new BufferedReader(
+                        new FileReader(
+                        new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), fileName)));
+        while ((line = bufferedReader.readLine()) != null)
+        {
+            for (String s: line.split(" "))
+            {
+                System.out.print(s+" ");
+            }
+            System.out.println();
         }
     }
 
