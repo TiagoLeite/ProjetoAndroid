@@ -110,14 +110,14 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
         double distance = 0f;
         distance += Exercise.DTW(seriesDoctor[0], sizeSeriesA,
                 seriesUser[0], sizeSeriesB,
-                0.1);
+                .05);
         distance += Exercise.DTW(seriesDoctor[1], sizeSeriesA,
                 seriesUser[1], sizeSeriesB,
-                0.1);
+                0.05);
         distance += Exercise.DTW(seriesDoctor[2], sizeSeriesA,
                 seriesUser[2], sizeSeriesB,
-                0.2);
-        ((TextView)findViewById(R.id.tv_distance)).setText(String.format("%.2f", distance));
+                0.12);
+        ((TextView)findViewById(R.id.tv_distance)).setText(String.format("%.2f", (1000f - distance)/10f) + "%");
     }
 
     private void handleRecording(String filename)
