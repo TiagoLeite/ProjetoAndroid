@@ -13,26 +13,27 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.LoginFilter;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExerciseActivity extends AppCompatActivity implements SensorEventListener
 {
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
-    private Button btnRecord;
-    private Button btnRead;
+    private Button btnRecord, btnRead, btnCalc;
     private BufferedWriter bufferedWriter;
-    private String fileName = "datasensor.txt";
 
     private static final int REQUEST_CODE = 0x11;
     private boolean isRecording = false;
@@ -63,18 +64,34 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
         btnRead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    readFile();
-                } catch (Exception e) {
+                try
+                {
+                    readFile("datasensor_train.txt");
+                }
+                catch (Exception e)
+                {
                     Log.d("debug", e.getMessage());
                 }
             }
         });
 
+        btnCalc = findViewById(R.id.btnCalc);
+        btnCalc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                calcSeries();
+            }
+        });
+
 
         String[] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE"};
-        ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE); // without sdk version check
+        ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE);
 
+    }
+
+    private void calcSeries()
+    {
+        //double seriesA =
     }
 
     private void handleRecording()
@@ -87,7 +104,7 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
         }
         else
         {
-            startRecordSensorValues();
+            startRecordSensorValues("datasensor_train.txt");
             Toast.makeText(this, "Recording!", Toast.LENGTH_LONG).show();
             isRecording = true;
         }
@@ -101,7 +118,7 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
         {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
-                // save file
+                //TODO: handle here
             }
             else
             {
@@ -110,7 +127,7 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
         }
     }
 
-    private boolean startRecordSensorValues()
+    private boolean startRecordSensorValues(String fileName)
     {
         try
         {
@@ -145,20 +162,25 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
         }
     }
 
-    public void readFile() throws Exception
+    @SuppressWarnings("unchecked")
+    public ArrayList[] readFile(String fileName) throws Exception
     {
-        String line;
+        ArrayList[] series = new ArrayList[3];
+        for (int k = 0; k < 3; k++)
+            series[k] = new ArrayList();
+        String line, tokens[];
         BufferedReader bufferedReader = new BufferedReader(
                         new FileReader(
                         new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), fileName)));
         while ((line = bufferedReader.readLine()) != null)
         {
-            for (String s: line.split(" "))
-            {
-                System.out.print(s+" ");
-            }
-            System.out.println();
+            tokens = line.split(" ");
+            series[0].add(Double.parseDouble(tokens[0]));
+            series[1].add(Double.parseDouble(tokens[1]));
+            series[2].add(Double.parseDouble(tokens[2]));
+            Log.d("debug", line);
         }
+        return series;
     }
 
 
