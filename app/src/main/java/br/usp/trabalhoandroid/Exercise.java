@@ -14,13 +14,10 @@ public class Exercise
     }
 
 
-    public static double DTW(double[] seriesA, double[] seriesB, double faixa)
+    public static double DTW(double[] seriesA, int sizeA, double[] seriesB, int sizeB, double faixa)
     {
-        int i, j, sizeA, sizeB;
+        int i, j;
         double dist;
-        sizeA = seriesA.length;
-        sizeB = seriesB.length;
-
         double dtw[][] = new double[sizeA+1][sizeB+1];
 
         for(i=1; i <= sizeA; i++)

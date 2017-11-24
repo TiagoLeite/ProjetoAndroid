@@ -1,6 +1,5 @@
 package br.usp.trabalhoandroid;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,7 +28,7 @@ public class VideoRecordActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.record_activity);
 
-        btnRecord = findViewById(R.id.btnRecord);
+        btnRecord = findViewById(R.id.btnRecordTrain);
         videoView = findViewById(R.id.videoView);
 
         btnRecord.setOnClickListener(new View.OnClickListener() {
