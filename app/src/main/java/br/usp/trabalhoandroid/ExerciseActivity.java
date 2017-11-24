@@ -116,7 +116,7 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
                 0.05);
         distance += Exercise.DTW(seriesDoctor[2], sizeSeriesA,
                 seriesUser[2], sizeSeriesB,
-                0.12);
+                0.05);
         ((TextView)findViewById(R.id.tv_distance)).setText(String.format("%.2f", (1000f - distance)/10f) + "%");
     }
 
