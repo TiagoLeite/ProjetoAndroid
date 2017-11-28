@@ -7,4 +7,7 @@
     <string name="sex">Sex:</string>
     <string name="email">Email:</string>
     <string name="confirmPassword">Confirm Password:</string>
+    <string name="username">Username:</string>
+    <string name="wrongPasswords">Passwords don\'t match</string>
+    <string name="emptyField">This field cannot be empty</string>
 </resources>

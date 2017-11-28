@@ -8,4 +8,7 @@
     <string name="sex">Sexo:</string>
     <string name="email">Email:</string>
     <string name="confirmPassword">Confirme a Senha:</string>
+    <string name="username">Usuário:</string>
+    <string name="wrongPasswords">Senhas inseridas não batem</string>
+    <string name="emptyField">Esse campo precisa ser preenchido</string>
 </resources>

@@ -25,12 +25,12 @@
 
             <TextView
                 style="@style/textView"
-                android:text="Login:"/>
+                android:text="@string/username"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etLogin"
+                android:id="@+id/etUsername"
                 android:paddingRight="20dp"/>
 
         </LinearLayout>
