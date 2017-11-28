@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TrabalhoAndroid</string>
+    <string name="password">Senha:</string>
+    <string name="register">CADASTRE-SE</string>
+    <string name="name">Nome:</string>
+    <string name="birthdate">Data de Nascimento:</string>
+    <string name="sex">Sexo:</string>
+    <string name="email">Email:</string>
+    <string name="confirmPassword">Confirme a Senha:</string>
+</resources>
