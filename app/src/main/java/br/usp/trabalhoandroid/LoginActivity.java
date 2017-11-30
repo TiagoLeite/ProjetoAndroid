@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-/**
- * Created by Victor on 28/11/2017.
- */
 
 public class LoginActivity extends AppCompatActivity{
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TrabalhoAndroid</string>
+    <string name="app_name">Trabalho Android</string>
     <string name="password">Senha:</string>
     <string name="register">CADASTRE-SE</string>
     <string name="name">Nome:</string>
@@ -11,4 +11,6 @@
     <string name="username">Usuário:</string>
     <string name="wrongPasswords">Senhas inseridas não batem</string>
     <string name="emptyField">Esse campo precisa ser preenchido</string>
+    <string name="open">Abrir</string>
+    <string name="close">Fechar</string>
 </resources>

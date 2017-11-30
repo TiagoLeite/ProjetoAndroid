@@ -1,6 +1,5 @@
 package br.usp.trabalhoandroid;
 
-
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -12,9 +11,11 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,8 +26,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-public class ExerciseActivity extends AppCompatActivity implements SensorEventListener
+public class ExerciseFragment extends Fragment implements SensorEventListener
 {
+    private View view; //root view
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private Button btnRecordTrain, btnRead, btnCalc;
@@ -38,73 +40,60 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
     private Button btnRecordTest;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_exercise);
-
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        if(mSensorManager == null)
-        {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_exercise, container, false);
+        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        if (mSensorManager == null) {
             error();
-            return;
+            return view;
         }
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        btnRecordTrain = findViewById(R.id.btnRecordTrain);
+        btnRecordTrain = view.findViewById(R.id.btnRecordTrain);
         btnRecordTrain.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 handleRecording("datasensor_train.txt");
             }
         });
-        btnRecordTest = findViewById(R.id.btnRecordTest);
+        btnRecordTest = view.findViewById(R.id.btnRecordTest);
         btnRecordTest.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 handleRecording("datasensor_test.txt");
             }
         });
 
-        btnRead = findViewById(R.id.btnRead);
+        btnRead = view.findViewById(R.id.btnRead);
         btnRead.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try
-                {
+                try {
                     readFile("datasensor_train.txt");
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     Log.d("debug", e.getMessage());
                 }
             }
         });
 
-        btnCalc = findViewById(R.id.btnCalc);
+        btnCalc = view.findViewById(R.id.btnCalc);
         btnCalc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try
-                {
+                try {
                     calcSeries();
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
 
                 }
             }
         });
-
-
         String[] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE"};
-        ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE);
-
+        ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_CODE);
+        return view;
     }
 
-    private void calcSeries() throws Exception
-    {
+    private void calcSeries() throws Exception {
         double[][] seriesDoctor = readFile("datasensor_train.txt");
         double[][] seriesUser = readFile("datasensor_test.txt");
         double distance = 0f;
@@ -117,80 +106,60 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
         distance += Exercise.DTW(seriesDoctor[2], sizeSeriesA,
                 seriesUser[2], sizeSeriesB,
                 0.05);
-        ((TextView)findViewById(R.id.tv_distance)).setText(String.format("%.2f", (1000f - distance)/10f) + "%");
+        ((TextView)view.findViewById(R.id.tv_distance)).setText(String.format("%.2f", (1000f - distance) / 10f) + "%");
     }
 
-    private void handleRecording(String filename)
-    {
-        if (isRecording)
-        {
+    private void handleRecording(String filename) {
+        if (isRecording) {
             stopRecordSensorValues();
             isRecording = false;
-            Toast.makeText(this, "Stopped Recording!", Toast.LENGTH_LONG).show();
-        }
-        else
-        {
+            Toast.makeText(getActivity(), "Stopped Recording!", Toast.LENGTH_LONG).show();
+        } else {
             startRecordSensorValues(filename);
-            Toast.makeText(this, "Recording!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Recording!", Toast.LENGTH_LONG).show();
             isRecording = true;
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-    {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE)
-        {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
+        if (requestCode == REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //TODO: handle here
-            }
-            else
-            {
-                Toast.makeText(getApplicationContext(), "PERMISSION_DENIED", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), "PERMISSION_DENIED", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private boolean startRecordSensorValues(String fileName)
-    {
-        try
-        {
+    private boolean startRecordSensorValues(String fileName) {
+        try {
             bufferedWriter = new BufferedWriter
-                             (new FileWriter
-                             (new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), fileName)));
-            mSensorManager.registerListener( this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+                    (new FileWriter
+                            (new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), fileName)));
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
             Log.d("debug", "STARTED REC");
             return true;
-        }
-        catch (Exception e)
-        {
-            Log.d("debug", e.getMessage()+e.getCause());
+        } catch (Exception e) {
+            Log.d("debug", e.getMessage() + e.getCause());
             return false;
         }
     }
 
-    private void stopRecordSensorValues()
-    {
-        try
-        {
+    private void stopRecordSensorValues() {
+        try {
             bufferedWriter.close();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             Log.d("debug", e.getMessage());
-        }
-        finally
-        {
+        } finally {
             Log.d("debug", "Stop REC");
             mSensorManager.unregisterListener(this);
         }
     }
 
     @SuppressWarnings("unchecked")
-    public double[][] readFile(String fileName) throws Exception
-    {
+    public double[][] readFile(String fileName) throws Exception {
         //TODO: Refactor: not limit series array size
         double[][] series = new double[3][];
         series[0] = new double[2048];
@@ -198,15 +167,14 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
         series[2] = new double[2048];
         String line, tokens[];
         BufferedReader bufferedReader = new BufferedReader(
-                        new FileReader(
+                new FileReader(
                         new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), fileName)));
         int k = 0;
-        while ((line = bufferedReader.readLine()) != null)
-        {
+        while ((line = bufferedReader.readLine()) != null) {
             tokens = line.split(" ");
-            series[0][k] = (Double.parseDouble(tokens[0]))/10f;
-            series[1][k] = (Double.parseDouble(tokens[1]))/10f;
-            series[2][k++] = (Double.parseDouble(tokens[2]))/10f;
+            series[0][k] = (Double.parseDouble(tokens[0])) / 10f;
+            series[1][k] = (Double.parseDouble(tokens[1])) / 10f;
+            series[2][k++] = (Double.parseDouble(tokens[2])) / 10f;
         }
         sizeSeriesA = k;
         sizeSeriesB = k;
@@ -215,20 +183,16 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event)
-    {
+    public void onSensorChanged(SensorEvent event) {
         float x = event.values[0];
         float y = event.values[1];
         float z = event.values[2];
-        try
-        {
+        try {
             bufferedWriter.append(Float.toString(x))
-                    .append(" "+Float.toString(y))
-                    .append(" "+Float.toString(z))
+                    .append(" " + Float.toString(y))
+                    .append(" " + Float.toString(z))
                     .append("\n");
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return;
         }
     }
@@ -241,7 +205,6 @@ public class ExerciseActivity extends AppCompatActivity implements SensorEventLi
     private void error()
     {
         //TODO: handle error
-        finish();
+        getActivity().finish();
     }
 }
-

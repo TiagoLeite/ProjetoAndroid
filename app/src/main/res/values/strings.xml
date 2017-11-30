@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TrabalhoAndroid</string>
+    <string name="app_name">Trabalho Android</string>
     <string name="password">Password:</string>
     <string name="register">REGISTER</string>
     <string name="name">Name:</string>
@@ -10,4 +10,6 @@
     <string name="username">Username:</string>
     <string name="wrongPasswords">Passwords don\'t match</string>
     <string name="emptyField">This field cannot be empty</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 </resources>

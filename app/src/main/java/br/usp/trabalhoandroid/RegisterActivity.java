@@ -13,11 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
-
-/**
- * Created by Victor on 28/11/2017.
- */
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -29,7 +24,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.fragment_register);
 
         etName = (EditText) findViewById(R.id.etName);
         etBirthDateDay = (EditText) findViewById(R.id.etBirthDateDay);
