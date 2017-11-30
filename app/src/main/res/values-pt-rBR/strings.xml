@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TrabalhoAndroid</string>
+    <string name="app_name">Trabalho Android</string>
     <string name="password">Senha:</string>
     <string name="register">CADASTRE-SE</string>
     <string name="name">Nome:</string>
@@ -8,4 +8,6 @@
     <string name="sex">Sexo:</string>
     <string name="email">Email:</string>
     <string name="confirmPassword">Confirme a Senha:</string>
+    <string name="open">Abrir</string>
+    <string name="close">Fechar</string>
 </resources>
