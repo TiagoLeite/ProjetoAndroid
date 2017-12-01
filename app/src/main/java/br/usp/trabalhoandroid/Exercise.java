@@ -3,9 +3,6 @@ package br.usp.trabalhoandroid;
 
 public class Exercise
 {
-    private double[] xAxisArray;
-    private double[] yAxisArray;
-    private double[] zAxisArray;
     private String name;
 
     public Exercise(String name)
@@ -34,12 +31,10 @@ public class Exercise
                         <= (int) (Math.ceil((faixa) * ((double) (sizeA - 1)))))
                 {
                     dtw[i][j] = 0;
-                    System.out.print("0");
                 }
                 else
                 {
                     dtw[i][j] = Double.MAX_VALUE;
-                    System.out.print("1");
                 }
             }
             System.out.println();
