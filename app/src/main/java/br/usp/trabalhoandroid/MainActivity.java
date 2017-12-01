@@ -3,6 +3,7 @@ package br.usp.trabalhoandroid;
 import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentMap.put("Exercícios", new ExerciseFragment());
         fragmentMap.put("Vídeos", new VideoRecordFragment());
         fragmentMap.put("Perfil", new ProfileFragment());
+
+        drawerLayout.openDrawer(GravityCompat.START);
 
     }
 
