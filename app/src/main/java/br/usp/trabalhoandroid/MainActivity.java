@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerViewDrawer;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
-    private Toolbar toolbar;
     private Map<String, Fragment> fragmentMap;
 
     @Override
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         recyclerViewDrawer = (RecyclerView) findViewById(R.id.drawer_recycler_view);
@@ -42,12 +41,11 @@ public class MainActivity extends AppCompatActivity {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerViewDrawer.setLayoutManager(llm);
         DrawerItem[] myDataset = new DrawerItem[]
-                {
-                        new DrawerItem("Login", DrawerItem.TYPE_TOPIC),
-                        new DrawerItem("Exercise", DrawerItem.TYPE_TOPIC),
-                        new DrawerItem("Register", DrawerItem.TYPE_TOPIC),
-                        new DrawerItem("Video", DrawerItem.TYPE_TITLE),
-                };
+            {
+                    new DrawerItem("Perfil", DrawerItem.TYPE_TITLE),
+                    new DrawerItem("Exercise", DrawerItem.TYPE_TITLE),
+                    new DrawerItem("Video", DrawerItem.TYPE_TITLE),
+            };
         RecyclerDrawerAdapter mAdapter = new RecyclerDrawerAdapter(myDataset);
         recyclerViewDrawer.setAdapter(mAdapter);
 
@@ -61,10 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentMap = new HashMap<>();
 
-        fragmentMap.put("login", new LoginFragment());
-        fragmentMap.put("exercise", new ExerciseFragment());
-        fragmentMap.put("register", new RegisterFragment());
-        fragmentMap.put("video", new VideoRecordFragment());
+        fragmentMap.put("Exercise", new ExerciseFragment());
+        fragmentMap.put("Video", new VideoRecordFragment());
+        fragmentMap.put("Perfil", new ProfileFragment());
 
     }
 
@@ -98,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             // create a new view
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.drawer_row, parent, false);
-            return new ViewHolderTitle(view);
+            return new ViewHolderMenu(view);
         }
 
         @Override
@@ -116,8 +113,27 @@ public class MainActivity extends AppCompatActivity {
         private void addItemTypeTitle(RecyclerView.ViewHolder viewHolder, int position)
         {
             final String itemText = mDataset[position].getItemText();
-            ViewHolderTitle holder = (ViewHolderTitle)viewHolder;
+            ViewHolderMenu holder = (ViewHolderMenu)viewHolder;
             holder.mTextView.setText(itemText);
+            holder.mTextView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View view)
+                {
+                    if(lastClicked != null)
+                    {
+                        ((TextView)lastClicked).setTextColor(getResources().getColor(R.color.colorPrimary));
+                        ((TextView)lastClicked).setTypeface(Typeface.DEFAULT);
+                        lastClicked.setBackgroundColor(getResources().getColor(R.color.transparent));
+                    }
+                    lastClicked = view;
+                    replaceFragment(fragmentMap.get(itemText));
+                    drawerLayout.closeDrawers();
+                    ((TextView)view).setTextColor(getResources().getColor(R.color.colorPrimary));
+                    ((TextView)view).setTypeface(Typeface.DEFAULT_BOLD);
+                    view.setBackgroundColor(getResources().getColor(R.color.gray));
+                }
+            });
         }
 
         @Override
@@ -125,10 +141,10 @@ public class MainActivity extends AppCompatActivity {
             return mDataset.length;
         }
 
-        class ViewHolderTitle extends RecyclerView.ViewHolder
+        class ViewHolderMenu extends RecyclerView.ViewHolder
         {
             TextView mTextView;
-            ViewHolderTitle(View v)
+            ViewHolderMenu(View v)
             {
                 super(v);
                 mTextView = (TextView) v.findViewById(R.id.tv_row_title);
@@ -139,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
     private class DrawerItem
     {
         public static final short TYPE_TITLE = 0;
-        public static final short TYPE_TOPIC = 1;
         private String itemText;
         private short itemType;
 
