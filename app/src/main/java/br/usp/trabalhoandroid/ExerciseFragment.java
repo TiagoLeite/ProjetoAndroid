@@ -43,6 +43,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_exercise, container, false);
+        getActivity().setTitle("Exercícios");
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         if (mSensorManager == null) {
             error();

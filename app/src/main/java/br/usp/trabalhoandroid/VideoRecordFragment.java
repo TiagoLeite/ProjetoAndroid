@@ -32,6 +32,9 @@ public class VideoRecordFragment extends Fragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.record_activity, container, false);
 
+        getActivity().setTitle("Vídeos");
+
+
         btnRecord = view.findViewById(R.id.btnRecordTrain);
         videoView = view.findViewById(R.id.videoView);
 
