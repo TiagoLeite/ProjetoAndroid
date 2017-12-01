@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                     new DrawerItem("Perfil", DrawerItem.TYPE_TITLE),
                     new DrawerItem("Exercícios", DrawerItem.TYPE_TITLE),
                     new DrawerItem("Vídeos", DrawerItem.TYPE_TITLE),
+                    new DrawerItem("Configurações", DrawerItem.TYPE_TITLE),
             };
         RecyclerDrawerAdapter mAdapter = new RecyclerDrawerAdapter(myDataset);
         recyclerViewDrawer.setAdapter(mAdapter);
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentMap.put("Exercícios", new ExerciseFragment());
         fragmentMap.put("Vídeos", new VideoRecordFragment());
         fragmentMap.put("Perfil", new ProfileFragment());
-
+        fragmentMap.put("Configurações", new SettingsFragment());
         drawerLayout.openDrawer(GravityCompat.START);
 
     }
