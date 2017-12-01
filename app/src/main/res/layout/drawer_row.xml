@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv_row_title"
+        android:textSize="18sp"
         android:padding="10dp"
         android:text="Text Sample"/>
 
