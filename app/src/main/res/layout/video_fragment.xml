@@ -20,23 +20,4 @@
         android:id="@+id/fabVideo"
         android:layout_margin="20dp"/>
 
-    <Button
-        android:id="@+id/btnRecordTrain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:visibility="gone"
-        android:text="GRAVAR" />
-
-    <VideoView
-        android:id="@+id/videoView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnRecordTrain"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:visibility="gone" />
-
 </FrameLayout>
