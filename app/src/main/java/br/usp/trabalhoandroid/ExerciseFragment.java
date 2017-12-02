@@ -1,211 +1,148 @@
 package br.usp.trabalhoandroid;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ExerciseFragment extends Fragment implements SensorEventListener
+import static android.app.Activity.RESULT_OK;
+
+public class ExerciseFragment extends Fragment
 {
-    private View view; //root view
-    private SensorManager mSensorManager;
-    private Sensor mAccelerometer;
-    private Button btnRecordTrain, btnRead, btnCalc;
-    private BufferedWriter bufferedWriter;
-    private int sizeSeriesA, sizeSeriesB;
-
-    private static final int REQUEST_CODE = 0x11;
-    private boolean isRecording = false;
-    private Button btnRecordTest;
+    static final int REQUEST_VIDEO_CAPTURE = 1;
+    View root;
+    RecyclerView videosRecyclerView;
+    ExerciseAdapter adapter;
+    List<ExerciseVideo> videosList = new ArrayList<>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    {
         super.onCreateView(inflater, container, savedInstanceState);
-        view = inflater.inflate(R.layout.fragment_exercise, container, false);
+        root = inflater.inflate(R.layout.video_fragment, container, false);
         getActivity().setTitle("Exercícios");
-        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        if (mSensorManager == null) {
-            error();
-            return view;
-        }
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        btnRecordTrain = view.findViewById(R.id.btnRecordTrain);
-        btnRecordTrain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleRecording("datasensor_train.txt");
-            }
-        });
-        btnRecordTest = view.findViewById(R.id.btnRecordTest);
-        btnRecordTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleRecording("datasensor_test.txt");
-            }
-        });
-
-        btnRead = view.findViewById(R.id.btnRead);
-        btnRead.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    readFile("datasensor_train.txt");
-                } catch (Exception e) {
-                    Log.d("debug", e.getMessage());
-                }
-            }
-        });
-
-        btnCalc = view.findViewById(R.id.btnCalc);
-        btnCalc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    calcSeries();
-                } catch (Exception e) {
-
-                }
-            }
-        });
-        String[] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE"};
-        ActivityCompat.requestPermissions(getActivity(), permissions, REQUEST_CODE);
-        return view;
+        setupRecyclerView();
+        setupFab();
+        return root;
     }
 
-    private void calcSeries() throws Exception {
-        double[][] seriesDoctor = readFile("datasensor_train.txt");
-        double[][] seriesUser = readFile("datasensor_test.txt");
-        double distance = 0f;
-        distance += Exercise.DTW(seriesDoctor[0], sizeSeriesA,
-                seriesUser[0], sizeSeriesB,
-                .05);
-        distance += Exercise.DTW(seriesDoctor[1], sizeSeriesA,
-                seriesUser[1], sizeSeriesB,
-                0.05);
-        distance += Exercise.DTW(seriesDoctor[2], sizeSeriesA,
-                seriesUser[2], sizeSeriesB,
-                0.05);
-        ((TextView)view.findViewById(R.id.tv_distance)).setText(String.format("%.2f", (1000f - distance) / 10f) + "%");
+    private void setupFab()
+    {
+        FloatingActionButton fab = root.findViewById(R.id.fabVideo);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                dispatchVideoRecordIntent();
+            }
+        });
     }
 
-    private void handleRecording(String filename) {
-        if (isRecording) {
-            stopRecordSensorValues();
-            isRecording = false;
-            Toast.makeText(getActivity(), "Stopped Recording!", Toast.LENGTH_LONG).show();
-        } else {
-            startRecordSensorValues(filename);
-            Toast.makeText(getActivity(), "Recording!", Toast.LENGTH_LONG).show();
-            isRecording = true;
+    private void setupRecyclerView()
+    {
+        videosRecyclerView = root.findViewById(R.id.videos_rv);
+        videosRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        videosRecyclerView.setLayoutManager(llm);
+        videosList = loadVideos();
+        adapter = new ExerciseAdapter((AppCompatActivity) getActivity(), videosList);
+        videosRecyclerView.setAdapter(adapter);
+    }
+
+    private void dispatchVideoRecordIntent()
+    {
+        Intent videoRecIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+        if (videoRecIntent.resolveActivity(getActivity().getPackageManager()) != null)
+        {
+            startActivityForResult(videoRecIntent, REQUEST_VIDEO_CAPTURE);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //TODO: handle here
-            } else {
-                Toast.makeText(getActivity(), "PERMISSION_DENIED", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-    private boolean startRecordSensorValues(String fileName) {
-        try {
-            bufferedWriter = new BufferedWriter
-                    (new FileWriter
-                            (new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), fileName)));
-            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-            Log.d("debug", "STARTED REC");
-            return true;
-        } catch (Exception e) {
-            Log.d("debug", e.getMessage() + e.getCause());
-            return false;
-        }
-    }
+        if (resultCode != RESULT_OK)
+            return;
 
-    private void stopRecordSensorValues() {
-        try {
-            bufferedWriter.close();
-        } catch (Exception e) {
-            Log.d("debug", e.getMessage());
-        } finally {
-            Log.d("debug", "Stop REC");
-            mSensorManager.unregisterListener(this);
+        if (requestCode == REQUEST_VIDEO_CAPTURE)
+        {
+            Uri videoUri = data.getData();
+            ExerciseVideo video = new ExerciseVideo("Video " + (videosList.size()+1) , videoUri.toString());
+            videosList.add(0, video);
+            adapter.notifyDataSetChanged();
+            saveVideos(videosList);
+            //Log.d("debug", data.getDataString());
+            //Log.d("debug", videoUri+"");
+            /*videoView.setVideoURI(videoUri);
+            videoView.setMediaController(new MediaController(getActivity()));
+            videoView.start();
+            //videoView.pause();
+            imageViewRecord.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //playVideo();
+                }
+            });*/
+
         }
+        Log.d("debug", resultCode + " " + requestCode);
     }
 
     @SuppressWarnings("unchecked")
-    public double[][] readFile(String fileName) throws Exception {
-        //TODO: Refactor: not limit series array size
-        double[][] series = new double[3][];
-        series[0] = new double[2048];
-        series[1] = new double[2048];
-        series[2] = new double[2048];
-        String line, tokens[];
-        BufferedReader bufferedReader = new BufferedReader(
-                new FileReader(
-                        new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), fileName)));
-        int k = 0;
-        while ((line = bufferedReader.readLine()) != null) {
-            tokens = line.split(" ");
-            series[0][k] = (Double.parseDouble(tokens[0])) / 10f;
-            series[1][k] = (Double.parseDouble(tokens[1])) / 10f;
-            series[2][k++] = (Double.parseDouble(tokens[2])) / 10f;
-        }
-        sizeSeriesA = k;
-        sizeSeriesB = k;
-        Log.d("debug", "size of " + fileName + ": " + k);
-        return series;
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        float x = event.values[0];
-        float y = event.values[1];
-        float z = event.values[2];
-        try {
-            bufferedWriter.append(Float.toString(x))
-                    .append(" " + Float.toString(y))
-                    .append(" " + Float.toString(z))
-                    .append("\n");
-        } catch (Exception e) {
-            return;
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
-    }
-
-    private void error()
+    private List<ExerciseVideo> loadVideos()
     {
-        //TODO: handle error
-        getActivity().finish();
+        try
+        {
+            FileInputStream fis = new FileInputStream(new File(Environment.getExternalStorageDirectory(),"/videos"));
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            List<ExerciseVideo> videos = (List<ExerciseVideo>)ois.readObject();
+            ois.close();
+            fis.close();
+            return videos;
+        }
+        catch (Exception e)
+        {
+            Log.d("debug", e.getMessage());
+            return new ArrayList<>();
+        }
     }
+
+    private void saveVideos(List<ExerciseVideo> videos)
+    {
+        try
+        {
+            FileOutputStream fos = new FileOutputStream(
+                    new File(Environment.getExternalStorageDirectory(),"/videos"), false);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(videos);
+            oos.close();
+            fos.close();
+        }
+        catch (Exception e)
+        {
+            Log.d("debug", e.getMessage());
+        }
+    }
+
 }

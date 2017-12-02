@@ -45,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         DrawerItem[] myDataset = new DrawerItem[]
             {
                     new DrawerItem("Perfil", DrawerItem.TYPE_TITLE),
+                    //new DrawerItem("Exercícios", DrawerItem.TYPE_TITLE),
                     new DrawerItem("Exercícios", DrawerItem.TYPE_TITLE),
-                    new DrawerItem("Vídeos", DrawerItem.TYPE_TITLE),
                     new DrawerItem("Configurações", DrawerItem.TYPE_TITLE),
             };
         RecyclerDrawerAdapter mAdapter = new RecyclerDrawerAdapter(myDataset);
@@ -62,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentMap = new HashMap<>();
 
+        //fragmentMap.put("Exercícios", new Exercise2Fragment());
         fragmentMap.put("Exercícios", new ExerciseFragment());
-        fragmentMap.put("Vídeos", new VideoFragment());
         fragmentMap.put("Perfil", new ProfileFragment());
         fragmentMap.put("Configurações", new SettingsFragment());
         drawerLayout.openDrawer(GravityCompat.START);

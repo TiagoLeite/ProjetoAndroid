@@ -3,37 +3,30 @@ package br.usp.trabalhoandroid;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import java.util.List;
 
 
-public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoViewHolder>
+public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoViewHolder>
 {
     AppCompatActivity activity;
     List<ExerciseVideo> videosList;
-    ImageView imageViewRecord;
-    VideoView videoView;
-    MediaSessionCompat mMediaSession;
-    PlaybackStateCompat.Builder mStateBuilder;
 
-    public VideosAdapter(AppCompatActivity activity,  List<ExerciseVideo> videos)
+    public ExerciseAdapter(AppCompatActivity activity, List<ExerciseVideo> videos)
     {
         videosList = videos;
         this.activity = activity;
     }
 
     @Override
-    public VideosAdapter.VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public ExerciseAdapter.VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         LayoutInflater inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.video_row, parent, false);
@@ -42,7 +35,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoViewH
     }
 
     @Override
-    public void onBindViewHolder(VideosAdapter.VideoViewHolder holder, int position) {
+    public void onBindViewHolder(ExerciseAdapter.VideoViewHolder holder, int position) {
 
         holder.videoTitle.setText(videosList.get(position).getDescription());
 
