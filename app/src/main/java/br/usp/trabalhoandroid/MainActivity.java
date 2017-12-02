@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     TextView TVWelcome;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         DrawerItem[] myDataset = new DrawerItem[]
             {
                     new DrawerItem("Perfil", DrawerItem.TYPE_TITLE),
+                    //new DrawerItem("Exercícios", DrawerItem.TYPE_TITLE),
                     new DrawerItem("Exercícios", DrawerItem.TYPE_TITLE),
-                    new DrawerItem("Vídeos", DrawerItem.TYPE_TITLE),
                     new DrawerItem("Configurações", DrawerItem.TYPE_TITLE),
             };
         RecyclerDrawerAdapter mAdapter = new RecyclerDrawerAdapter(myDataset);
@@ -66,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentMap = new HashMap<>();
 
+        //fragmentMap.put("Exercícios", new Exercise2Fragment());
         fragmentMap.put("Exercícios", new ExerciseFragment());
-        fragmentMap.put("Vídeos", new VideoRecordFragment());
         fragmentMap.put("Perfil", new ProfileFragment());
         fragmentMap.put("Configurações", new SettingsFragment());
         drawerLayout.openDrawer(GravityCompat.START);

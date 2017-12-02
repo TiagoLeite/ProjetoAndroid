@@ -13,4 +13,13 @@
     <string name="emptyField">Esse campo precisa ser preenchido</string>
     <string name="open">Abrir</string>
     <string name="close">Fechar</string>
+    <string name="exercise_title">Exercício</string>
+    <string name="lets_exercise">Hora de exercitar-se</string>
+    <string name="alarm_open">Abrir</string>
+    <string name="time">Horário:</string>
+    <string name="alarm">Alarme de exercícios</string>
+    <string name="language">Idioma</string>
+    <string name="portuguese">Português</string>
+    <string name="english">Inglês</string>
+    <string name="exercise">Exercício</string>
 </resources>
