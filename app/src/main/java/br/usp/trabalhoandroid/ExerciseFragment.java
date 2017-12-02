@@ -88,7 +88,8 @@ public class ExerciseFragment extends Fragment
         if (requestCode == REQUEST_VIDEO_CAPTURE)
         {
             Uri videoUri = data.getData();
-            ExerciseVideo video = new ExerciseVideo("Video " + (videosList.size()+1) , videoUri.toString());
+            ExerciseVideo video = new ExerciseVideo(getResources().getString(R.string.exercise)
+                    + (videosList.size()+1) , videoUri.toString());
             videosList.add(0, video);
             adapter.notifyDataSetChanged();
             saveVideos(videosList);

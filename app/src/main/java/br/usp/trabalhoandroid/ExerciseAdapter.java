@@ -8,7 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.util.List;
@@ -41,7 +43,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
 
         final int pos = holder.getAdapterPosition();
 
-        holder.root.setOnClickListener(new View.OnClickListener() {
+        holder.play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
@@ -51,6 +53,20 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
                 root_view.findViewById(R.id.toolbar).setVisibility(View.GONE);
                 //activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 playVideo(videosList.get(pos), root_view);
+            }
+        });
+
+        holder.train.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                Toast.makeText(view.getContext(), "TRAIN",Toast.LENGTH_LONG).show();
+                /*View root_view = view.getRootView();
+                root_view.findViewById(R.id.list_exercises_container).setVisibility(View.GONE);
+                root_view.findViewById(R.id.videoView).setVisibility(View.VISIBLE);
+                root_view.findViewById(R.id.toolbar).setVisibility(View.GONE);
+                //activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                playVideo(videosList.get(pos), root_view);*/
             }
         });
 
@@ -65,12 +81,15 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
     {
         ViewGroup root;
         TextView videoTitle;
+        ImageView play, train;
 
         public VideoViewHolder(View itemView)
         {
             super(itemView);
             videoTitle = itemView.findViewById(R.id.video_description);
             root = itemView.findViewById(R.id.row_root);
+            play = itemView.findViewById(R.id.image_play);
+            train = itemView.findViewById(R.id.image_train);
         }
 
     }
