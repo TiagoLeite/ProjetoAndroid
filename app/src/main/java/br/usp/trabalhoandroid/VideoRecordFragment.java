@@ -9,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,28 +20,34 @@ import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.app.Activity.RESULT_OK;
 
 public class VideoRecordFragment extends Fragment
 {
+    View root;
     static final int REQUEST_VIDEO_CAPTURE = 1;
     Button btnRecord;
     VideoView videoView;
     MediaSessionCompat mMediaSession;
     PlaybackStateCompat.Builder mStateBuilder;
+    RecyclerView videosRecyclerView;
+    VideosAdapter adapter;
     private boolean isPlaying = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.record_activity, container, false);
+
+        root = inflater.inflate(R.layout.record_activity, container, false);
 
         getActivity().setTitle("Vídeos");
 
-
-        btnRecord = view.findViewById(R.id.btnRecordTrain);
-        videoView = view.findViewById(R.id.videoView);
+        btnRecord = root.findViewById(R.id.btnRecordTrain);
+        videoView = root.findViewById(R.id.videoView);
 
         btnRecord.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +55,26 @@ public class VideoRecordFragment extends Fragment
                 dispatchVideoRecordIntent();
             }
         });
-        return view;
+
+        setupRecyclerView();
+
+        return root;
+    }
+
+    private void setupRecyclerView()
+    {
+        videosRecyclerView = root.findViewById(R.id.videos_rv);
+        videosRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        videosRecyclerView.setLayoutManager(llm);
+        List<ExerciseVideo> list = new ArrayList<>();
+        list.add(new ExerciseVideo("Video 1"));
+        list.add(new ExerciseVideo("Video 2"));
+        list.add(new ExerciseVideo("Video 3"));
+        adapter = new VideosAdapter((AppCompatActivity) getActivity(), list);
+        videosRecyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
     private void dispatchVideoRecordIntent()
