@@ -1,16 +1,12 @@
 package br.usp.trabalhoandroid;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
-import android.media.session.MediaController;
 import android.net.Uri;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,7 +92,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoViewH
     private void playVideo(ExerciseVideo video, final View root)
     {
         VideoView videoView = root.findViewById(R.id.videoView);
-        Uri videoUri = video.getUri();
+        Uri videoUri = Uri.parse(video.getUriString());
         videosList.add(video);
         videoView.setVideoURI(videoUri);
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

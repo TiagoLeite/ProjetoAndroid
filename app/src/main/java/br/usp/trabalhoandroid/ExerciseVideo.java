@@ -1,25 +1,23 @@
 package br.usp.trabalhoandroid;
 
-import android.net.Uri;
-
 import java.io.Serializable;
 
 public class ExerciseVideo implements Serializable
 {
-    private Uri uri;
+    private String uriString;
     private String description;
 
-    public ExerciseVideo(String description, Uri uri)
+    public ExerciseVideo(String description, String uri)
     {
         this.description = description;
-        this.uri = uri;
+        this.uriString = uri;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public Uri getUri() {
-        return uri;
+    public String getUriString() {
+        return uriString;
     }
 }

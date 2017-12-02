@@ -3,6 +3,7 @@ package br.usp.trabalhoandroid;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +23,13 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,10 +74,7 @@ public class VideoFragment extends Fragment
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         videosRecyclerView.setLayoutManager(llm);
-        videosList = new ArrayList<>();
-        videosList.add(new ExerciseVideo("Video 1", null));
-        //videosList.add(new ExerciseVideo("Video 2"));
-        //videosList.add(new ExerciseVideo("Video 3"));
+        videosList = loadVideos();
         adapter = new VideosAdapter((AppCompatActivity) getActivity(), videosList);
         videosRecyclerView.setAdapter(adapter);
     }
@@ -92,9 +97,10 @@ public class VideoFragment extends Fragment
         if (requestCode == REQUEST_VIDEO_CAPTURE)
         {
             Uri videoUri = data.getData();
-            ExerciseVideo video = new ExerciseVideo("Name", videoUri);
-            videosList.add(video);
+            ExerciseVideo video = new ExerciseVideo("Video " + (videosList.size()+1) , videoUri.toString());
+            videosList.add(0, video);
             adapter.notifyDataSetChanged();
+            saveVideos(videosList);
             //Log.d("debug", data.getDataString());
             //Log.d("debug", videoUri+"");
             /*videoView.setVideoURI(videoUri);
@@ -110,6 +116,41 @@ public class VideoFragment extends Fragment
 
         }
         Log.d("debug", resultCode + " " + requestCode);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<ExerciseVideo> loadVideos()
+    {
+        try
+        {
+            FileInputStream fis = new FileInputStream(new File(getActivity().getFilesDir()+"/videos"));
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            List<ExerciseVideo> videos = (List<ExerciseVideo>)ois.readObject();
+            ois.close();
+            fis.close();
+            return videos;
+        }
+        catch (Exception e)
+        {
+            Log.d("debug", e.getMessage());
+            return new ArrayList<ExerciseVideo>();
+        }
+    }
+
+    private void saveVideos(List<ExerciseVideo> videos)
+    {
+        try
+        {
+            FileOutputStream fos = new FileOutputStream(new File(getActivity().getFilesDir()+"/videos"));
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(videos);
+            oos.close();
+            fos.close();
+        }
+        catch (Exception e)
+        {
+            Log.d("debug", e.getMessage());
+        }
     }
 
 }
