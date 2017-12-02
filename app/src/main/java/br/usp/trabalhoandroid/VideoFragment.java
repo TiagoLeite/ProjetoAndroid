@@ -100,7 +100,7 @@ public class VideoFragment extends Fragment
 
         if (requestCode == REQUEST_VIDEO_CAPTURE)
         {
-            Uri videoUri = data.getData();
+            /*Uri videoUri = data.getData();
             videoView.setVideoURI(videoUri);
             videoView.setMediaController(new MediaController(getActivity()));
             videoView.start();
@@ -110,7 +110,7 @@ public class VideoFragment extends Fragment
                 public void onClick(View view) {
                     //playVideo();
                 }
-            });
+            });*/
 
         }
 
@@ -118,7 +118,7 @@ public class VideoFragment extends Fragment
 
     }
 
-    /*private void playVideo()
+    private void playVideo()
     {
 
         // Create a MediaSessionCompat
@@ -148,6 +148,6 @@ public class VideoFragment extends Fragment
                 new MediaControllerCompat(getActivity(), mMediaSession);
 
         MediaControllerCompat.setMediaController(getActivity(), mediaController);
-    }*/
+    }
 
 }
