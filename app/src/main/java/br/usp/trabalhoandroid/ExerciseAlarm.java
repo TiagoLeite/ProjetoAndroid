@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.PowerManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -38,9 +39,12 @@ public class ExerciseAlarm extends BroadcastReceiver
         {
             showNotifications(context, intent);
         }
+        Log.d("debug", "Received!");
+
     }
 
-    protected void showNotifications(Context context, Intent intent) {
+    protected void showNotifications(Context context, Intent intent)
+    {
         String title = context.getString(ALARM_NOTIFICATION_TITLE);
         String content = context.getString(ALARM_NOTIFICATION_TEXT);
         Toast.makeText(context, title, Toast.LENGTH_SHORT).show();
@@ -73,20 +77,20 @@ public class ExerciseAlarm extends BroadcastReceiver
         next.set(Calendar.MINUTE, getAlarmMinute(context));
         next.set(Calendar.SECOND, 0);
         next.set(Calendar.MILLISECOND, 0);
-        while (next.before(now) || next.equals(now)) {
-            next.add(Calendar.DAY_OF_MONTH, 1);
-        }
+        next.add(Calendar.DAY_OF_YEAR, 1);
+
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        if (android.os.Build.VERSION.SDK_INT > 22) {
+
+        if (android.os.Build.VERSION.SDK_INT > 22)
+        {
             PowerManager pm = (PowerManager)context.getSystemService(Context.POWER_SERVICE);
-            if (!pm.isDeviceIdleMode()) {
+            if (!pm.isDeviceIdleMode())
                 am.set(AlarmManager.RTC_WAKEUP, next.getTimeInMillis(), getAlarmIntent(context));
-            } else {
+            else
                 am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, next.getTimeInMillis(), getAlarmIntent(context));
-            }
-        } else {
-            am.set(AlarmManager.RTC_WAKEUP, next.getTimeInMillis(), getAlarmIntent(context));
         }
+        else
+            am.set(AlarmManager.RTC_WAKEUP, next.getTimeInMillis(), getAlarmIntent(context));
     }
 
     public static void cancelNextAlarm(Context context) {
