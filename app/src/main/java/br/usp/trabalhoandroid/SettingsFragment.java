@@ -36,7 +36,7 @@ public class SettingsFragment extends Fragment
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 ExerciseAlarm.setAlarmEnabled(checked, getContext());
-                ExerciseAlarm.setNextAlarm(getContext());
+                ExerciseAlarm.setAlarm(getContext());
             }
         });
 
@@ -56,7 +56,7 @@ public class SettingsFragment extends Fragment
                     {
                         ExerciseAlarm.setAlarmTime(hour, minute, getContext());
                         editExerciseTime.setText(AppUtil.formatTime(hour, minute));
-                        ExerciseAlarm.setNextAlarm(getContext());
+                        ExerciseAlarm.setAlarm(getContext());
                     }
                 }, ExerciseAlarm.getAlarmHour(getContext()), ExerciseAlarm.getAlarmMinute(getContext()),
                         true);

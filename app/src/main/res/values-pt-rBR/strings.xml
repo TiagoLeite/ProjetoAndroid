@@ -18,4 +18,7 @@
     <string name="alarm_open">Abrir</string>
     <string name="time">Horário:</string>
     <string name="alarm">Alarme de exercícios</string>
+    <string name="language">Idioma</string>
+    <string name="portuguese">Português</string>
+    <string name="english">Inglês</string>
 </resources>
