@@ -5,19 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
+    <VideoView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/videos_rv">
-    </android.support.v7.widget.RecyclerView>
+        android:id="@+id/videoView"
+        android:visibility="gone"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/plus"
-        app:fabSize="normal"
-        android:id="@+id/fabVideo"
-        android:layout_margin="20dp"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:id="@+id/list_exercises_container">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/videos_rv">
+        </android.support.v7.widget.RecyclerView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/plus"
+            app:fabSize="normal"
+            android:id="@+id/fabVideo"
+            android:layout_margin="20dp"/>
+
+    </FrameLayout>
+
 
 </FrameLayout>

@@ -37,20 +37,16 @@ public class VideoFragment extends Fragment
     View root;
     RecyclerView videosRecyclerView;
     VideosAdapter adapter;
-    private boolean isPlaying = false;
+    List<ExerciseVideo> videosList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-
         root = inflater.inflate(R.layout.video_fragment, container, false);
-
         getActivity().setTitle("Vídeos");
-
         setupRecyclerView();
         setupFab();
-
         return root;
     }
 
@@ -74,13 +70,12 @@ public class VideoFragment extends Fragment
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         videosRecyclerView.setLayoutManager(llm);
-        List<ExerciseVideo> list = new ArrayList<>();
-        list.add(new ExerciseVideo("Video 1"));
-        list.add(new ExerciseVideo("Video 2"));
-        list.add(new ExerciseVideo("Video 3"));
-        adapter = new VideosAdapter((AppCompatActivity) getActivity(), list);
+        videosList = new ArrayList<>();
+        videosList.add(new ExerciseVideo("Video 1", null));
+        //videosList.add(new ExerciseVideo("Video 2"));
+        //videosList.add(new ExerciseVideo("Video 3"));
+        adapter = new VideosAdapter((AppCompatActivity) getActivity(), videosList);
         videosRecyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
     }
 
     private void dispatchVideoRecordIntent()
@@ -100,8 +95,13 @@ public class VideoFragment extends Fragment
 
         if (requestCode == REQUEST_VIDEO_CAPTURE)
         {
-            /*Uri videoUri = data.getData();
-            videoView.setVideoURI(videoUri);
+            Uri videoUri = data.getData();
+            ExerciseVideo video = new ExerciseVideo("Name", videoUri);
+            videosList.add(video);
+            adapter.notifyDataSetChanged();
+            //Log.d("debug", data.getDataString());
+            //Log.d("debug", videoUri+"");
+            /*videoView.setVideoURI(videoUri);
             videoView.setMediaController(new MediaController(getActivity()));
             videoView.start();
             //videoView.pause();
@@ -113,9 +113,7 @@ public class VideoFragment extends Fragment
             });*/
 
         }
-
         Log.d("debug", resultCode + " " + requestCode);
-
     }
 
     private void playVideo()
