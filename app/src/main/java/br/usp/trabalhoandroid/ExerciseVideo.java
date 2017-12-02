@@ -18,4 +18,8 @@ public class ExerciseVideo implements Serializable
     public String getDescription() {
         return description;
     }
+
+    public Uri getUri() {
+        return uri;
+    }
 }

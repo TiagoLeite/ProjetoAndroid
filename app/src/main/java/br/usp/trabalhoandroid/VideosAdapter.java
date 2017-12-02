@@ -2,13 +2,21 @@ package br.usp.trabalhoandroid;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.media.MediaPlayer;
+import android.media.session.MediaController;
+import android.net.Uri;
+import android.support.v4.media.session.MediaControllerCompat;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import java.util.List;
 
@@ -17,7 +25,10 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoViewH
 {
     AppCompatActivity activity;
     List<ExerciseVideo> videosList;
-    ViewGroup parent;
+    ImageView imageViewRecord;
+    VideoView videoView;
+    MediaSessionCompat mMediaSession;
+    PlaybackStateCompat.Builder mStateBuilder;
 
     public VideosAdapter(AppCompatActivity activity,  List<ExerciseVideo> videos)
     {
@@ -39,6 +50,8 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoViewH
 
         holder.videoTitle.setText(videosList.get(position).getDescription());
 
+        final int pos = holder.getAdapterPosition();
+
         holder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
@@ -48,7 +61,7 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoViewH
                 root_view.findViewById(R.id.videoView).setVisibility(View.VISIBLE);
                 root_view.findViewById(R.id.toolbar).setVisibility(View.GONE);
                 //activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                Log.d("debug", "Clciked");
+                playVideo(videosList.get(pos), root_view);
             }
         });
 
@@ -71,5 +84,39 @@ public class VideosAdapter extends RecyclerView.Adapter<VideosAdapter.VideoViewH
             root = itemView.findViewById(R.id.row_root);
         }
 
+    }
+
+    private void finishPlay(View root)
+    {
+        root.findViewById(R.id.videoView).setVisibility(View.GONE);
+        root.findViewById(R.id.toolbar).setVisibility(View.VISIBLE);
+        root.findViewById(R.id.list_exercises_container).setVisibility(View.VISIBLE);
+    }
+
+    private void playVideo(ExerciseVideo video, final View root)
+    {
+        VideoView videoView = root.findViewById(R.id.videoView);
+        Uri videoUri = video.getUri();
+        videosList.add(video);
+        videoView.setVideoURI(videoUri);
+        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                finishPlay(root);
+            }
+        });
+        videoView.start();
+        /*mMediaSession = new MediaSessionCompat(activity, "debug");
+        mMediaSession.setFlags(
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+        mMediaSession.setMediaButtonReceiver(null);
+        mStateBuilder = new PlaybackStateCompat.Builder()
+                .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE);
+
+        MediaControllerCompat mediaController =
+                new MediaControllerCompat(activity, mMediaSession);
+
+        MediaControllerCompat.setMediaController(activity, mediaController);*/
     }
 }

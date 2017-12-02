@@ -30,10 +30,6 @@ import static android.app.Activity.RESULT_OK;
 public class VideoFragment extends Fragment
 {
     static final int REQUEST_VIDEO_CAPTURE = 1;
-    ImageView imageViewRecord;
-    VideoView videoView;
-    MediaSessionCompat mMediaSession;
-    PlaybackStateCompat.Builder mStateBuilder;
     View root;
     RecyclerView videosRecyclerView;
     VideosAdapter adapter;
@@ -114,38 +110,6 @@ public class VideoFragment extends Fragment
 
         }
         Log.d("debug", resultCode + " " + requestCode);
-    }
-
-    private void playVideo()
-    {
-
-        // Create a MediaSessionCompat
-        mMediaSession = new MediaSessionCompat(getActivity(), "debug");
-
-        // Enable callbacks from MediaButtons and TransportControls
-        mMediaSession.setFlags(
-                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-
-        // Do not let MediaButtons restart the player when the app is not visible
-        mMediaSession.setMediaButtonReceiver(null);
-
-        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player
-        mStateBuilder = new PlaybackStateCompat.Builder()
-                .setActions(
-                        PlaybackStateCompat.ACTION_PLAY |
-                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
-
-        //mMediaSession.setState(mStateBuilder.build());
-
-        // MySessionCallback has methods that handle callbacks from a media controller
-        //mMediaSession.setCallback(new MySessionCallback());
-
-        // Create a MediaControllerCompat
-        MediaControllerCompat mediaController =
-                new MediaControllerCompat(getActivity(), mMediaSession);
-
-        MediaControllerCompat.setMediaController(getActivity(), mediaController);
     }
 
 }
