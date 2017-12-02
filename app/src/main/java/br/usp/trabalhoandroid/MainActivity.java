@@ -1,8 +1,6 @@
 package br.usp.trabalhoandroid;
 
-import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -14,8 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentMap = new HashMap<>();
 
         fragmentMap.put("Exercícios", new ExerciseFragment());
-        fragmentMap.put("Vídeos", new VideoRecordFragment());
+        fragmentMap.put("Vídeos", new VideoFragment());
         fragmentMap.put("Perfil", new ProfileFragment());
         fragmentMap.put("Configurações", new SettingsFragment());
         drawerLayout.openDrawer(GravityCompat.START);

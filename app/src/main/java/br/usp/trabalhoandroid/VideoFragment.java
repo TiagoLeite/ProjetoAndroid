@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -25,7 +26,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class VideoRecordFragment extends Fragment
+public class VideoFragment extends Fragment
 {
     View root;
     static final int REQUEST_VIDEO_CAPTURE = 1;
@@ -42,7 +43,7 @@ public class VideoRecordFragment extends Fragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        root = inflater.inflate(R.layout.record_activity, container, false);
+        root = inflater.inflate(R.layout.video_fragment, container, false);
 
         getActivity().setTitle("Vídeos");
 
@@ -57,8 +58,22 @@ public class VideoRecordFragment extends Fragment
         });
 
         setupRecyclerView();
+        setupFab();
 
         return root;
+    }
+
+    private void setupFab()
+    {
+        FloatingActionButton fab = root.findViewById(R.id.fabVideo);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                startActivityForResult(new Intent(getActivity(), VideoRecordActivity.class), 1);
+            }
+        });
     }
 
     private void setupRecyclerView()
