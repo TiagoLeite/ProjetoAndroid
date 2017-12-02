@@ -1,6 +1,10 @@
 package br.usp.trabalhoandroid;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -19,12 +29,14 @@ public class RegisterActivity extends AppCompatActivity {
     TextView t;
     RadioButton rbSexM, rbSexF;
     Button btnRegister;
+    Context context;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        context = this;
         etName = (EditText) findViewById(R.id.etName);
         etBirthDateDay = (EditText) findViewById(R.id.etBirthDateDay);
         etBirthDateMonth = (EditText) findViewById(R.id.etBirthDateMonth);
@@ -37,6 +49,9 @@ public class RegisterActivity extends AppCompatActivity {
         rbSexM = (RadioButton) findViewById(R.id.rbSexM);
         btnRegister = (Button) findViewById(R.id.btnOKRegister);
 
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        //if(networkInfo != null )
 
         //TextListeners change the focus of the Date of Birth EditTexts as the user types the day, month and year
         etBirthDateDay.addTextChangedListener(new TextWatcher() {
@@ -47,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etBirthDateDay.getText().toString().length() == 2) {
+                if (etBirthDateDay.getText().toString().length() == 2) {
                     etBirthDateMonth.requestFocus();
                 }
             }
@@ -66,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etBirthDateMonth.getText().toString().length() == 2) {
+                if (etBirthDateMonth.getText().toString().length() == 2) {
                     etBirthDateYear.requestFocus();
                 }
             }
@@ -85,7 +100,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etBirthDateYear.getText().toString().length() == 4) {
+                if (etBirthDateYear.getText().toString().length() == 4) {
                     etEmail.requestFocus();
                 }
             }
@@ -102,27 +117,48 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(checkInput()) {
+                if (checkInput()) {
                     String name = etName.getText().toString();
                     String birthDate = etBirthDateDay.getText().toString() + "/" + etBirthDateMonth.getText().toString() + "/" + etBirthDateYear.getText().toString();
                     String email = etEmail.getText().toString();
                     String username = etUsername.getText().toString();
                     String password = etPassword.getText().toString();
                     String confirmPassword = etConfirmPassword.getText().toString();
+                    String gender;
+                    if (rbSexM.isChecked())
+                        gender = "male";
+                    else
+                        gender = "female";
+
+                    //name, email, gender, birth, password
+
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.REGISTER_URL,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+
+                                }
+                            }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getApplicationContext(), "There was a connection error. Please, try again.", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    MySingleton.getInstance(context).addToRequestQueue(stringRequest);
 
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                     intent.putExtra("username", username);
                     intent.putExtra("password", password);
 
+
                     startActivity(intent);
-                }else{
+                } else {
 
                 }
             }
         });
-
-
     }
+
 
     private boolean checkInput(){
         if(!checkField(etName)) return false;

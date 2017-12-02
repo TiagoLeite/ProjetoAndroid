@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.MediaController;
 import android.widget.VideoView;
 
 import static android.app.Activity.RESULT_OK;
@@ -25,6 +26,7 @@ public class VideoRecordFragment extends Fragment
     VideoView videoView;
     MediaSessionCompat mMediaSession;
     PlaybackStateCompat.Builder mStateBuilder;
+    private boolean isPlaying = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -66,6 +68,9 @@ public class VideoRecordFragment extends Fragment
         {
             Uri videoUri = data.getData();
             videoView.setVideoURI(videoUri);
+            videoView.setMediaController(new MediaController(this.getActivity()));
+            videoView.start();
+            //videoView.pause();
 
             btnRecord.setOnClickListener(new View.OnClickListener() {
                 @Override
