@@ -1,5 +1,6 @@
 package br.usp.trabalhoandroid;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -80,32 +83,40 @@ public class ExerciseFragment extends Fragment
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
 
         if (resultCode != RESULT_OK)
             return;
-
         if (requestCode == REQUEST_VIDEO_CAPTURE)
         {
-            Uri videoUri = data.getData();
-            ExerciseVideo video = new ExerciseVideo(getResources().getString(R.string.exercise)
-                    + (videosList.size()+1) , videoUri.toString());
-            videosList.add(0, video);
-            adapter.notifyDataSetChanged();
-            saveVideos(videosList);
-            //Log.d("debug", data.getDataString());
-            //Log.d("debug", videoUri+"");
-            /*videoView.setVideoURI(videoUri);
-            videoView.setMediaController(new MediaController(getActivity()));
-            videoView.start();
-            //videoView.pause();
-            imageViewRecord.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //playVideo();
-                }
-            });*/
-
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            LayoutInflater inflater = getLayoutInflater();
+            builder.setTitle(R.string.new_exercise);
+            builder.setCancelable(false);
+            builder.setIcon(R.drawable.icon);
+            final View layoutView = inflater.inflate(R.layout.add_exercise_dialog, null);
+            final EditText input = layoutView.findViewById(R.id.et_exercise_name);
+            builder.setView(layoutView)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            Uri videoUri = data.getData();
+                            ExerciseVideo video = new ExerciseVideo(input.getText().toString(),
+                                    videoUri.toString());
+                            videosList.add(0, video);
+                            adapter.notifyDataSetChanged();
+                            saveVideos(videosList);
+                        }
+                    })
+                    .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+            builder.create();
+            builder.show();
         }
         Log.d("debug", resultCode + " " + requestCode);
     }

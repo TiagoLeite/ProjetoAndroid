@@ -21,4 +21,6 @@
     <string name="portuguese">Português</string>
     <string name="english">Inglês</string>
     <string name="exercise">Exercício</string>
+    <string name="new_exercise">Novo exercício</string>
+    <string name="cancel">Cancelar</string>
 </resources>
