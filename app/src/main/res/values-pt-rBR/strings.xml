@@ -24,4 +24,6 @@
     <string name="exercise">Exercício</string>
     <string name="new_exercise">Novo exercício</string>
     <string name="cancel">Cancelar</string>
+    <string name="recording">Gravando...</string>
+    <string name="recorded">Gravado com sucesso</string>
 </resources>

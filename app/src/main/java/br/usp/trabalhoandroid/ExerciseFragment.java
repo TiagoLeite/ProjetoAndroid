@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -39,10 +40,11 @@ import static android.app.Activity.RESULT_OK;
 public class ExerciseFragment extends Fragment implements SensorEventListener
 {
     static final int REQUEST_VIDEO_CAPTURE = 1;
-    View root;
-    RecyclerView videosRecyclerView;
-    ExerciseAdapter adapter;
-    List<Exercise> videosList = new ArrayList<>();
+    private View root;
+    private Button recButton;
+    private RecyclerView videosRecyclerView;
+    private ExerciseAdapter adapter;
+    private List<Exercise> videosList = new ArrayList<>();
     private BufferedWriter bufferedWriter;
     private int sizeSeriesA, sizeSeriesB;
     private static final int REQUEST_CODE = 0x11;
@@ -114,7 +116,8 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
             builder.setCancelable(false);
             builder.setIcon(R.drawable.icon);
             final View layoutView = inflater.inflate(R.layout.add_exercise_dialog, null);
-            layoutView.findViewById(R.id.button_capture).setOnClickListener(new View.OnClickListener() {
+            recButton = layoutView.findViewById(R.id.button_capture);
+            recButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view)
                 {
@@ -261,9 +264,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         final MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.beep);
         if (isRecording)
         {
-            stopRecordSensorValues();
-            isRecording = false;
-            Toast.makeText(getActivity(), "Stopped Recording!", Toast.LENGTH_LONG).show();
+            stopRecording();
         }
         else
         {
@@ -276,12 +277,29 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
 
                 public void onFinish()
                 {
-                    startRecordSensorValues("file_train.txt");
-                    isRecording = true;
+                    startRecording();
                 }
 
             }.start();
         }
+    }
+
+    private void startRecording()
+    {
+        startRecordSensorValues("file_train.txt");
+        Toast.makeText(getActivity(), getResources().getString(R.string.recording),
+                Toast.LENGTH_LONG).show();
+        recButton.setText(getResources().getString(R.string.recording));
+        isRecording = true;
+    }
+
+    private void stopRecording()
+    {
+        stopRecordSensorValues();
+        isRecording = false;
+        recButton.setText(getResources().getString(R.string.recorded));
+        recButton.setOnClickListener(null);
+        Toast.makeText(getActivity(), getResources().getString(R.string.recorded), Toast.LENGTH_LONG).show();
     }
 
     private boolean startRecordSensorValues(String fileName) {
@@ -331,16 +349,18 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
             String action = intent.getAction();
             if (action != null)
             {
-                if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+                if (action.equals(Intent.ACTION_SCREEN_OFF))
+                {
                     Log.d("debug", "OFF");
-                    // do whatever you need to do here
+                    stopRecording();
                     wasScreenOn = false;
                 }
-                else if (action.equals(Intent.ACTION_SCREEN_ON)) {
+                /*else if (action.equals(Intent.ACTION_SCREEN_ON))
+                {
                     Log.d("debug", "ON");
                     // and do whatever you need to do here
                     wasScreenOn = true;
-                }
+                }*/
             }
         }
 
