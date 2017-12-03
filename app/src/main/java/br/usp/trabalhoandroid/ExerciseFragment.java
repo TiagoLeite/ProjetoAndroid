@@ -326,14 +326,15 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     private void stopRecordSensorValues()
     {
         Log.d("debug", "Stop REC");
-        mSensorManager.unregisterListener(this);
+        mSensorManager.unregisterListener(this, mAccelerometer);
     }
 
     @Override
-    public void onStop()
+    public void onPause()
     {
-        super.onStop();
-        mSensorManager.unregisterListener(this);
+        super.onPause();
+        Log.d("debug", "PAUSED");
+        mSensorManager.unregisterListener(this, mAccelerometer);
     }
 
     private class ScreenReceiver extends BroadcastReceiver

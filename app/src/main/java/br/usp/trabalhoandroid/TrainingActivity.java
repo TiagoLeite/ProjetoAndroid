@@ -1,20 +1,14 @@
 package br.usp.trabalhoandroid;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.CountDownTimer;
-import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -42,25 +36,34 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        if (mAccelerometer == null || mSensorManager == null)
+            Log.d("debug", "NULL");
+        else
+            Log.d("debug", "not NULL");
+
 
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         professionalExercise = (Exercise) getIntent().getExtras().getSerializable("exercise");
-        professionalExercise.printSeries();
+        //professionalExercise.printSeries();
         Log.d("debug", professionalExercise.getName());
 
         setTitle(getResources().getString(R.string.training).concat(" ").concat(professionalExercise.getName()));
+
+        userExercise = new Exercise();
+        userExercise.setName(professionalExercise.getName());
 
         recButton = findViewById(R.id.bt_capture);
         recButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
-                userExercise = new Exercise();
-                userExercise.setName(professionalExercise.getName());
+                findViewById(R.id.rec_info).setVisibility(View.GONE);
+                handleRecording();
             }
         });
 
@@ -91,6 +94,7 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         recButton.setText(getResources().getString(R.string.recorded));
         recButton.setOnClickListener(null);
         Toast.makeText(this, getResources().getString(R.string.recorded), Toast.LENGTH_LONG).show();
+        userExercise.printSeries();
     }
 
     private boolean startRecordSensorValues()
@@ -134,7 +138,6 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         }
     }
 
-
     private void handleRecording()
     {
         final MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.beep);
@@ -169,13 +172,14 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
     private void stopRecordSensorValues()
     {
         Log.d("debug", "Stop REC");
-        mSensorManager.unregisterListener(this);
+        mSensorManager.unregisterListener(this, mAccelerometer);
     }
 
     @Override
-    public void onStop()
+    public void onPause()
     {
-        super.onStop();
-        mSensorManager.unregisterListener(this);
+        super.onPause();
+        mSensorManager.unregisterListener(this, mAccelerometer);
+        //userExercise = null;
     }
 }
