@@ -275,23 +275,6 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         return series;
     }
 
-    private void calcSeries() throws Exception
-    {
-        double[][] seriesDoctor = readFile("datasensor_train.txt");
-        double[][] seriesUser = readFile("datasensor_test.txt");
-        double distance = 0f;
-        distance += Exercise.DTW(seriesDoctor[0], sizeSeriesA,
-                seriesUser[0], sizeSeriesB,
-                .05);
-        distance += Exercise.DTW(seriesDoctor[1], sizeSeriesA,
-                seriesUser[1], sizeSeriesB,
-                0.05);
-        distance += Exercise.DTW(seriesDoctor[2], sizeSeriesA,
-                seriesUser[2], sizeSeriesB,
-                0.05);
-        //((TextView)view.findViewById(R.id.tv_distance)).setText(String.format("%.2f", (1000f - distance) / 10f) + "%");
-    }
-
     private void handleRecording()
     {
         final MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.beep);

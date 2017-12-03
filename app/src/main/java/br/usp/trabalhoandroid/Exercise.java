@@ -36,6 +36,10 @@ public class Exercise implements Serializable
         return name;
     }
 
+    public double[][] getSeries() {
+        return series;
+    }
+
     public String getVideoUriString() {
         return videoUriString;
     }
@@ -99,6 +103,26 @@ public class Exercise implements Serializable
         Log.d("debug", "size:" + sizeSeries);
         for(int k = 0; k < sizeSeries; k++)
             Log.d("debug", series[0][k] + " " + series[1][k] + " " + series[2][k]);
+    }
+
+    public double calcDistanceOfSeries(Exercise otherExercise)
+    {
+        double[][] seriesDoctor = otherExercise.getSeries();
+        double[][] seriesUser = this.series;
+        int sizeSeriesB = this.sizeSeries;
+        int sizeSeriesA = otherExercise.sizeSeries;
+        double distance = 0f;
+        distance += Exercise.DTW(seriesDoctor[0], sizeSeriesA,
+                seriesUser[0], sizeSeriesB,
+                .05);
+        distance += Exercise.DTW(seriesDoctor[1], sizeSeriesA,
+                seriesUser[1], sizeSeriesB,
+                0.05);
+        distance += Exercise.DTW(seriesDoctor[2], sizeSeriesA,
+                seriesUser[2], sizeSeriesB,
+                0.05);
+        return distance;
+        //((TextView)view.findViewById(R.id.tv_distance)).setText(String.format("%.2f", (1000f - distance) / 10f) + "%");
     }
 
 }
