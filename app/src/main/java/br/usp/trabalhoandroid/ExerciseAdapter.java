@@ -1,6 +1,7 @@
 package br.usp.trabalhoandroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -19,11 +20,11 @@ import java.util.List;
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoViewHolder>
 {
     AppCompatActivity activity;
-    List<Exercise> videosList;
+    List<Exercise> exerciseList;
 
     public ExerciseAdapter(AppCompatActivity activity, List<Exercise> videos)
     {
-        videosList = videos;
+        exerciseList = videos;
         this.activity = activity;
     }
 
@@ -31,7 +32,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
     public ExerciseAdapter.VideoViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         LayoutInflater inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = inflater.inflate(R.layout.video_row, parent, false);
+        View v = inflater.inflate(R.layout.exercise_row, parent, false);
         VideoViewHolder holder = new VideoViewHolder(v);
         return holder;
     }
@@ -39,7 +40,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
     @Override
     public void onBindViewHolder(ExerciseAdapter.VideoViewHolder holder, int position) {
 
-        holder.videoTitle.setText(videosList.get(position).getName());
+        holder.videoTitle.setText(exerciseList.get(position).getName());
 
         final int pos = holder.getAdapterPosition();
 
@@ -52,7 +53,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
                 root_view.findViewById(R.id.videoView).setVisibility(View.VISIBLE);
                 root_view.findViewById(R.id.toolbar).setVisibility(View.GONE);
                 //activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                playVideo(videosList.get(pos), root_view);
+                playVideo(exerciseList.get(pos), root_view);
             }
         });
 
@@ -61,12 +62,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
             public void onClick(View view)
             {
                 Toast.makeText(view.getContext(), "TRAIN",Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(activity, TrainingActivity.class);
+                activity.startActivity(intent);
                 /*View root_view = view.getRootView();
                 root_view.findViewById(R.id.list_exercises_container).setVisibility(View.GONE);
                 root_view.findViewById(R.id.videoView).setVisibility(View.VISIBLE);
                 root_view.findViewById(R.id.toolbar).setVisibility(View.GONE);
                 //activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                playVideo(videosList.get(pos), root_view);*/
+                playVideo(exerciseList.get(pos), root_view);*/
             }
         });
 
@@ -74,7 +77,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
 
     @Override
     public int getItemCount() {
-        return videosList.size();
+        return exerciseList.size();
     }
 
     class VideoViewHolder extends RecyclerView.ViewHolder
@@ -105,7 +108,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
     {
         VideoView videoView = root.findViewById(R.id.videoView);
         Uri videoUri = Uri.parse(video.getVideoUriString());
-        videosList.add(video);
+        exerciseList.add(video);
         videoView.setVideoURI(videoUri);
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override

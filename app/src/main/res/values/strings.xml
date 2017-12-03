@@ -25,4 +25,5 @@
     <string name="cancel">Cancelar</string>
     <string name="recording">Gravando...</string>
     <string name="recorded">Gravado com sucesso</string>
+    <string name="training">Treino</string>
 </resources>

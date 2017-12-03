@@ -45,7 +45,6 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     private RecyclerView videosRecyclerView;
     private ExerciseAdapter adapter;
     private List<Exercise> exerciseList = new ArrayList<>();
-    private BufferedWriter bufferedWriter;
     private int sizeSeriesA, sizeSeriesB;
     private static final int REQUEST_CODE = 0x11;
     private SensorManager mSensorManager;
@@ -58,7 +57,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        root = inflater.inflate(R.layout.video_fragment, container, false);
+        root = inflater.inflate(R.layout.exercise_fragment, container, false);
         getActivity().setTitle("Exercícios");
         setupRecyclerView();
         setupFab();
@@ -86,7 +85,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
 
     private void setupRecyclerView()
     {
-        videosRecyclerView = root.findViewById(R.id.videos_rv);
+        videosRecyclerView = root.findViewById(R.id.exercises_rv);
         videosRecyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);

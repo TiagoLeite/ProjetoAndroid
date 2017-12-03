@@ -27,7 +27,7 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/videos_rv">
+            android:id="@+id/exercises_rv">
         </android.support.v7.widget.RecyclerView>
 
         <android.support.design.widget.FloatingActionButton
