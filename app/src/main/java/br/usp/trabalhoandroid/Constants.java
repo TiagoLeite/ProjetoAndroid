@@ -1,9 +1,5 @@
 package br.usp.trabalhoandroid;
 
-/**
- * Created by Gabriel on 02/12/2017.
- */
-
 public class Constants {
 
     // Webhost Constants
