@@ -32,6 +32,10 @@ public class Exercise implements Serializable
         series[2][sizeSeries++] = z;
     }
 
+    public int getSizeSeries() {
+        return sizeSeries;
+    }
+
     public String getName() {
         return name;
     }

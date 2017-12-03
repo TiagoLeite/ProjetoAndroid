@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -20,15 +19,17 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/layout_rec"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/rec_info"
+                android:layout_marginTop="10dp"
                 android:text="Clique para iniciar captura"
-                android:layout_marginBottom="6dp"
+                android:layout_marginBottom="0dp"
                 android:layout_gravity="center"/>
 
             <Button
@@ -42,6 +43,13 @@
 
         </LinearLayout>
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:id="@+id/exercise_chart"
+            android:layout_height="match_parent">
+
+        </com.github.mikephil.charting.charts.LineChart>
 
     </FrameLayout>
 

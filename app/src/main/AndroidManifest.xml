@@ -47,7 +47,8 @@
             android:name=".RegisterActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".TrainingActivity" android:screenOrientation="portrait" />
+        <activity android:name=".TrainingActivity"
+            android:screenOrientation="portrait" android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <receiver android:name=".ExerciseAlarm" />
 
