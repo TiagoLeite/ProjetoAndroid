@@ -61,15 +61,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
             @Override
             public void onClick(View view)
             {
-                Toast.makeText(view.getContext(), "TRAIN",Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(activity, TrainingActivity.class);
+                intent.putExtra("exercise", exerciseList.get(pos));
                 activity.startActivity(intent);
-                /*View root_view = view.getRootView();
-                root_view.findViewById(R.id.list_exercises_container).setVisibility(View.GONE);
-                root_view.findViewById(R.id.videoView).setVisibility(View.VISIBLE);
-                root_view.findViewById(R.id.toolbar).setVisibility(View.GONE);
-                //activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                playVideo(exerciseList.get(pos), root_view);*/
             }
         });
 
