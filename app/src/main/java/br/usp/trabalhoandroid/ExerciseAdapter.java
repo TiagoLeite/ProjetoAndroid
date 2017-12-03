@@ -19,9 +19,9 @@ import java.util.List;
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoViewHolder>
 {
     AppCompatActivity activity;
-    List<ExerciseVideo> videosList;
+    List<Exercise> videosList;
 
-    public ExerciseAdapter(AppCompatActivity activity, List<ExerciseVideo> videos)
+    public ExerciseAdapter(AppCompatActivity activity, List<Exercise> videos)
     {
         videosList = videos;
         this.activity = activity;
@@ -39,7 +39,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
     @Override
     public void onBindViewHolder(ExerciseAdapter.VideoViewHolder holder, int position) {
 
-        holder.videoTitle.setText(videosList.get(position).getDescription());
+        holder.videoTitle.setText(videosList.get(position).getName());
 
         final int pos = holder.getAdapterPosition();
 
@@ -101,10 +101,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
         root.findViewById(R.id.list_exercises_container).setVisibility(View.VISIBLE);
     }
 
-    private void playVideo(ExerciseVideo video, final View root)
+    private void playVideo(Exercise video, final View root)
     {
         VideoView videoView = root.findViewById(R.id.videoView);
-        Uri videoUri = Uri.parse(video.getUriString());
+        Uri videoUri = Uri.parse(video.getVideoUriString());
         videosList.add(video);
         videoView.setVideoURI(videoUri);
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

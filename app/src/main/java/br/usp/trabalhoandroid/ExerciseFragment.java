@@ -35,7 +35,7 @@ public class ExerciseFragment extends Fragment
     View root;
     RecyclerView videosRecyclerView;
     ExerciseAdapter adapter;
-    List<ExerciseVideo> videosList = new ArrayList<>();
+    List<Exercise> videosList = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -102,7 +102,7 @@ public class ExerciseFragment extends Fragment
                         public void onClick(DialogInterface dialog, int id)
                         {
                             Uri videoUri = data.getData();
-                            ExerciseVideo video = new ExerciseVideo(input.getText().toString(),
+                            Exercise video = new Exercise(input.getText().toString(),
                                     videoUri.toString());
                             videosList.add(0, video);
                             adapter.notifyDataSetChanged();
@@ -122,13 +122,13 @@ public class ExerciseFragment extends Fragment
     }
 
     @SuppressWarnings("unchecked")
-    private List<ExerciseVideo> loadVideos()
+    private List<Exercise> loadVideos()
     {
         try
         {
             FileInputStream fis = new FileInputStream(new File(Environment.getExternalStorageDirectory(),"/videos"));
             ObjectInputStream ois = new ObjectInputStream(fis);
-            List<ExerciseVideo> videos = (List<ExerciseVideo>)ois.readObject();
+            List<Exercise> videos = (List<Exercise>)ois.readObject();
             ois.close();
             fis.close();
             return videos;
@@ -140,7 +140,7 @@ public class ExerciseFragment extends Fragment
         }
     }
 
-    private void saveVideos(List<ExerciseVideo> videos)
+    private void saveVideos(List<Exercise> videos)
     {
         try
         {

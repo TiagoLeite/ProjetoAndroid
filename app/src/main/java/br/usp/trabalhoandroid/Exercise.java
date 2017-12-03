@@ -1,15 +1,25 @@
 package br.usp.trabalhoandroid;
 
+import java.io.Serializable;
 
-public class Exercise
+public class Exercise implements Serializable
 {
+    private String videoUriString;
     private String name;
 
-    public Exercise(String name)
+    public Exercise(String name, String uri)
     {
         this.name = name;
+        this.videoUriString = uri;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getVideoUriString() {
+        return videoUriString;
+    }
 
     public static double DTW(double[] seriesA, int sizeA, double[] seriesB, int sizeB, double faixa)
     {
@@ -64,5 +74,4 @@ public class Exercise
         min = (min < c) ? min : c;
         return min;
     }
-
 }
