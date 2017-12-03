@@ -1,16 +1,35 @@
 package br.usp.trabalhoandroid;
 
+import android.util.Log;
+
 import java.io.Serializable;
 
 public class Exercise implements Serializable
 {
     private String videoUriString;
     private String name;
+    private double series[][];
+    private int sizeSeries;
 
-    public Exercise(String name, String uri)
+    public Exercise()
     {
+        this.series = new double[3][2048]; // x, y, z, with 2048 values each one
+        sizeSeries = 0;
+    }
+
+    public void setName(String name) {
         this.name = name;
-        this.videoUriString = uri;
+    }
+
+    public void setVideoUriString(String videoUriString) {
+        this.videoUriString = videoUriString;
+    }
+
+    public void updateSeries(double x, double y, double z)
+    {
+        series[0][sizeSeries] = x;
+        series[1][sizeSeries] = y;
+        series[2][sizeSeries++] = z;
     }
 
     public String getName() {
@@ -74,4 +93,12 @@ public class Exercise implements Serializable
         min = (min < c) ? min : c;
         return min;
     }
+
+    public void printSeries()
+    {
+        Log.d("debug", "size:" + sizeSeries);
+        for(int k = 0; k < sizeSeries; k++)
+            Log.d("debug", series[0][k] + " " + series[1][k] + " " + series[2][k]);
+    }
+
 }

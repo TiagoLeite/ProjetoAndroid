@@ -35,13 +35,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TVWelcome = (TextView) findViewById(R.id.TVWelcome);
+        TVWelcome = findViewById(R.id.TVWelcome);
         TVWelcome.setText("Welcome, " + Constants.NAME);
 
-        recyclerViewDrawer = (RecyclerView) findViewById(R.id.drawer_recycler_view);
+        recyclerViewDrawer = findViewById(R.id.drawer_recycler_view);
         recyclerViewDrawer.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -49,14 +49,13 @@ public class MainActivity extends AppCompatActivity {
         DrawerItem[] myDataset = new DrawerItem[]
             {
                     new DrawerItem("Perfil", DrawerItem.TYPE_TITLE),
-                    //new DrawerItem("Exercícios", DrawerItem.TYPE_TITLE),
                     new DrawerItem("Exercícios", DrawerItem.TYPE_TITLE),
                     new DrawerItem("Configurações", DrawerItem.TYPE_TITLE),
             };
         RecyclerDrawerAdapter mAdapter = new RecyclerDrawerAdapter(myDataset);
         recyclerViewDrawer.setAdapter(mAdapter);
 
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -66,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentMap = new HashMap<>();
 
-        //fragmentMap.put("Exercícios", new Exercise2Fragment());
         fragmentMap.put("Exercícios", new ExerciseFragment());
         fragmentMap.put("Perfil", new ProfileFragment());
         fragmentMap.put("Configurações", new SettingsFragment());

@@ -44,13 +44,14 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     private Button recButton;
     private RecyclerView videosRecyclerView;
     private ExerciseAdapter adapter;
-    private List<Exercise> videosList = new ArrayList<>();
+    private List<Exercise> exerciseList = new ArrayList<>();
     private BufferedWriter bufferedWriter;
     private int sizeSeriesA, sizeSeriesB;
     private static final int REQUEST_CODE = 0x11;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private boolean isRecording = false;
+    private Exercise currentExercise;
 
 
     @Override
@@ -62,6 +63,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         setupRecyclerView();
         setupFab();
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         ScreenReceiver mReceiver = new ScreenReceiver();
@@ -89,8 +91,8 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         videosRecyclerView.setLayoutManager(llm);
-        videosList = loadVideos();
-        adapter = new ExerciseAdapter((AppCompatActivity) getActivity(), videosList);
+        exerciseList = loadVideos();
+        adapter = new ExerciseAdapter((AppCompatActivity) getActivity(), exerciseList);
         videosRecyclerView.setAdapter(adapter);
     }
 
@@ -104,14 +106,15 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
-
+    public void onActivityResult(int requestCode, int resultCode, final Intent data)
+    {
         if (resultCode != RESULT_OK)
             return;
         if (requestCode == REQUEST_VIDEO_CAPTURE)
         {
+            currentExercise = new Exercise();
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getLayoutInflater();
+            final LayoutInflater inflater = getLayoutInflater();
             builder.setTitle(R.string.new_exercise);
             builder.setCancelable(false);
             builder.setIcon(R.drawable.icon);
@@ -121,7 +124,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
                 @Override
                 public void onClick(View view)
                 {
-                    handleRecording("datasensor_train.txt");
+                    handleRecording();
                 }
             });
             final EditText input = layoutView.findViewById(R.id.et_exercise_name);
@@ -131,16 +134,19 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
                         public void onClick(DialogInterface dialog, int id)
                         {
                             Uri videoUri = data.getData();
-                            Exercise video = new Exercise(input.getText().toString(),
-                                    videoUri.toString());
-                            videosList.add(0, video);
+                            currentExercise.setName(input.getText().toString());
+                            currentExercise.setVideoUriString(videoUri.toString());
+                            exerciseList.add(0, currentExercise);
+                            currentExercise.printSeries();
                             adapter.notifyDataSetChanged();
-                            saveVideos(videosList);
+                            currentExercise = null;
+                            saveVideos(exerciseList);
                         }
                     })
                     .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
+                            currentExercise = null;
                             dialogInterface.cancel();
                         }
                     });
@@ -186,19 +192,46 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         }
     }
 
+    private void startRecording()
+    {
+        startRecordSensorValues();
+        Toast.makeText(getActivity(), getResources().getString(R.string.recording),
+                Toast.LENGTH_LONG).show();
+        recButton.setText(getResources().getString(R.string.recording));
+        isRecording = true;
+    }
+
+    private void stopRecording()
+    {
+        stopRecordSensorValues();
+        isRecording = false;
+        recButton.setText(getResources().getString(R.string.recorded));
+        recButton.setOnClickListener(null);
+        Toast.makeText(getActivity(), getResources().getString(R.string.recorded), Toast.LENGTH_LONG).show();
+    }
+
+    private boolean startRecordSensorValues()
+    {
+        try
+        {
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            Log.d("debug", "STARTED REC");
+            return true;
+        }
+        catch (Exception e)
+        {
+            Log.d("debug", e.getMessage() + e.getCause());
+            return false;
+        }
+    }
+
     @Override
-    public void onSensorChanged(SensorEvent event) {
+    public void onSensorChanged(SensorEvent event)
+    {
         float x = event.values[0];
         float y = event.values[1];
         float z = event.values[2];
-        try {
-            bufferedWriter.append(Float.toString(x))
-                    .append(" " + Float.toString(y))
-                    .append(" " + Float.toString(z))
-                    .append("\n");
-        } catch (Exception e) {
-            return;
-        }
+        currentExercise.updateSeries(x, z, y);
     }
 
     @Override
@@ -219,7 +252,8 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     }
 
     @SuppressWarnings("unchecked")
-    public double[][] readFile(String fileName) throws Exception {
+    public double[][] readFile(String fileName) throws Exception
+    {
         //TODO: Refactor: not limit series array size
         double[][] series = new double[3][];
         series[0] = new double[2048];
@@ -259,7 +293,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         //((TextView)view.findViewById(R.id.tv_distance)).setText(String.format("%.2f", (1000f - distance) / 10f) + "%");
     }
 
-    private void handleRecording(String filename)
+    private void handleRecording()
     {
         final MediaPlayer mediaPlayer = MediaPlayer.create(getActivity(), R.raw.beep);
         if (isRecording)
@@ -284,39 +318,6 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         }
     }
 
-    private void startRecording()
-    {
-        startRecordSensorValues("file_train.txt");
-        Toast.makeText(getActivity(), getResources().getString(R.string.recording),
-                Toast.LENGTH_LONG).show();
-        recButton.setText(getResources().getString(R.string.recording));
-        isRecording = true;
-    }
-
-    private void stopRecording()
-    {
-        stopRecordSensorValues();
-        isRecording = false;
-        recButton.setText(getResources().getString(R.string.recorded));
-        recButton.setOnClickListener(null);
-        Toast.makeText(getActivity(), getResources().getString(R.string.recorded), Toast.LENGTH_LONG).show();
-    }
-
-    private boolean startRecordSensorValues(String fileName) {
-        try
-        {
-            bufferedWriter = new BufferedWriter
-                    (new FileWriter
-                            (new File(Environment.getExternalStorageDirectory().getAbsoluteFile(), fileName)));
-            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
-            Log.d("debug", "STARTED REC");
-            return true;
-        } catch (Exception e) {
-            Log.d("debug", e.getMessage() + e.getCause());
-            return false;
-        }
-    }
-
     private void error()
     {
         //TODO: handle error
@@ -325,19 +326,15 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
 
     private void stopRecordSensorValues()
     {
-        try
-        {
-            bufferedWriter.close();
-        }
-        catch (Exception e)
-        {
-            Log.d("debug", e.getMessage());
-        }
-        finally
-        {
-            Log.d("debug", "Stop REC");
-            mSensorManager.unregisterListener(this);
-        }
+        Log.d("debug", "Stop REC");
+        mSensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        mSensorManager.unregisterListener(this);
     }
 
     private class ScreenReceiver extends BroadcastReceiver
