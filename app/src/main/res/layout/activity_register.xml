@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -28,10 +29,11 @@
 
 
             <EditText
+                android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etName"
-                android:inputType="textCapWords"/>
+                android:inputType="textCapWords"
+                tools:maxLength="50" />
 
         </LinearLayout>
 
@@ -130,10 +132,11 @@
 
 
             <EditText
+                android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etEmail"
-                android:inputType="textEmailAddress"/>
+                android:inputType="textEmailAddress"
+                tools:maxLength="50" />
 
         </LinearLayout>
 
@@ -149,10 +152,11 @@
 
 
             <EditText
+                android:id="@+id/etUsernameRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etUsernameRegister"
-                android:inputType="textPersonName"/>
+                android:inputType="textPersonName"
+                tools:maxLength="20" />
 
         </LinearLayout>
 
@@ -168,10 +172,12 @@
 
 
             <EditText
+                android:id="@+id/etPasswordRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etPasswordRegister"
-                android:inputType="textVisiblePassword"/>
+                android:hint="Maximum: 12 characters"
+                android:inputType="textPassword"
+                tools:maxLength="12" />
 
         </LinearLayout>
 
@@ -188,10 +194,12 @@
 
 
             <EditText
+                android:id="@+id/etConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/etConfirmPassword"
-                android:inputType="textVisiblePassword"/>
+                android:hint="Maximum: 12 characters"
+                android:inputType="textPassword|textVisiblePassword"
+                tools:maxLength="12" />
 
         </LinearLayout>
 

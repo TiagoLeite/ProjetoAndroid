@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private Map<String, Fragment> fragmentMap;
+    TextView TVWelcome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        TVWelcome = (TextView) findViewById(R.id.TVWelcome);
+        TVWelcome.setText("Welcome, " + Constants.NAME);
 
         recyclerViewDrawer = (RecyclerView) findViewById(R.id.drawer_recycler_view);
         recyclerViewDrawer.setHasFixedSize(true);
