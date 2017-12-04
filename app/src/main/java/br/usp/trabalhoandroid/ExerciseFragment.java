@@ -62,10 +62,6 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         setupFab();
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        final IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        ScreenReceiver mReceiver = new ScreenReceiver();
-        getActivity().registerReceiver(mReceiver, filter);
         return root;
     }
 
@@ -314,39 +310,11 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     public void onPause()
     {
         super.onPause();
-        Log.d("debug", "PAUSED");
-        mSensorManager.unregisterListener(this, mAccelerometer);
+        Log.d("debug", this.getClass().toString()+"PAUSED");
+        if(isRecording)
+            stopRecording();
+        //mSensorManager.unregisterListener(this, mAccelerometer);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
 
-    }
-
-    private class ScreenReceiver extends BroadcastReceiver
-    {
-        public boolean wasScreenOn = true;
-        @Override
-        public void onReceive(final Context context, final Intent intent)
-        {
-            String action = intent.getAction();
-            if (action != null)
-            {
-                if (action.equals(Intent.ACTION_SCREEN_OFF))
-                {
-                    Log.d("debug", "OFF");
-                    stopRecording();
-                    wasScreenOn = false;
-                }
-                /*else if (action.equals(Intent.ACTION_SCREEN_ON))
-                {
-                    Log.d("debug", "ON");
-                    // and do whatever you need to do here
-                    wasScreenOn = true;
-                }*/
-            }
-        }
-
-    }
 }

@@ -1,6 +1,9 @@
 package br.usp.trabalhoandroid;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -67,7 +70,6 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         exerciseChartX = findViewById(R.id.exercise_chart_x);
         exerciseChartY = findViewById(R.id.exercise_chart_y);
         exerciseChartZ = findViewById(R.id.exercise_chart_z);
-
 
         if (mAccelerometer == null || mSensorManager == null)
             Log.d("debug", "NULL");
@@ -337,16 +339,19 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
     public void onPause()
     {
         super.onPause();
-        mSensorManager.unregisterListener(this, mAccelerometer);
-        //userExercise = null;
+        Log.d("debug", this.getClass().toString()+"PAUSED");
+        if(isRecording)
+            stopRecording();
+        //mSensorManager.unregisterListener(this, mAccelerometer);
     }
 
     @Override
     public void onBackPressed()
     {
-        //super.onBackPressed();
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("exercise", userExercise);
-        startActivity(intent);
+        super.onBackPressed();
+        //Intent intent = new Intent(this, MainActivity.class);
+        //intent.putExtra("exercise", userExercise);
+        //startActivity(intent);
     }
+
 }
