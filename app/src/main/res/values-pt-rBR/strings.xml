@@ -30,4 +30,5 @@
     <string name="profile">PERFIL</string>
     <string name="changeProfilePic">TROCAR FOTO DE PERFIL</string>
     <string name="editProfile">EDITAR PERFIL</string>
+    <string name="saveChanges">SALVAR MUDANÇAS</string>
 </resources>

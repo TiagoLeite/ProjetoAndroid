@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/editProfile"
+        style="@style/Base.TextAppearance.AppCompat.Headline"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/lightBlue"
+        android:id="@+id/titler" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="20dp">
+
+        <TextView
+            style="@style/textView"
+            android:text="@string/name"/>
+
+
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            tools:maxLength="50" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/textView"
+            android:text="@string/sex"/>
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbSexM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="M"
+                android:paddingRight="15dp"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="F"
+                android:id="@+id/rbSexF"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="20dp">
+
+        <TextView
+            style="@style/textView"
+            android:text="@string/birthdate"/>
+
+
+        <EditText
+            android:id="@+id/etBirthDateDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLength="2"
+            android:inputType="date"
+            android:hint="DD"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/etBirthDateMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLength="2"
+            android:inputType="date"
+            android:hint="MM"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/"
+            android:textSize="20dp" />
+
+        <EditText
+            android:id="@+id/etBirthDateYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLength="4"
+            android:inputType="date"
+            android:hint="YYYY"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="20dp">
+
+        <TextView
+            style="@style/textView"
+            android:text="@string/email"/>
+
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            tools:maxLength="50" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="20dp">
+
+        <TextView
+            style="@style/textView"
+            android:text="@string/password"/>
+
+
+        <EditText
+            android:id="@+id/etPasswordRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Maximum: 12 characters"
+            android:inputType="textPassword"
+            tools:maxLength="12" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingRight="20dp"
+        android:paddingBottom="40dp">
+
+        <TextView
+            style="@style/textView"
+            android:text="@string/confirmPassword"/>
+
+
+        <EditText
+            android:id="@+id/etConfirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Maximum: 12 characters"
+            android:inputType="textPassword|textVisiblePassword"
+            tools:maxLength="12" />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/button"
+        android:id="@+id/btnOKRegister"
+        android:text="@string/saveChanges"
+        android:layout_gravity="center_horizontal" />
+
+</LinearLayout>
