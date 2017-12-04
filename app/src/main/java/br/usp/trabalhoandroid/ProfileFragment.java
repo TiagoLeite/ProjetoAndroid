@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,12 +34,28 @@ public class ProfileFragment extends Fragment {
     ImageView imgProfilePic;
     Button btnChangePic, btnEditProfile;
     final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/picFolder/";
+    //TextView tvName;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         getActivity().setTitle("Perfil");
+
+        TextView tvName = (TextView) view.findViewById(R.id.tvName);
+        TextView tvEmail = (TextView) view.findViewById(R.id.tvEmail);
+        TextView tvGender = (TextView) view.findViewById(R.id.tvSex);
+        TextView tvBirth = (TextView) view.findViewById(R.id.tvBirth);
+        TextView tvUsername = (TextView) view.findViewById(R.id.tvUsername);
+        TextView tvPassword = (TextView) view.findViewById(R.id.tvPassword);
+
+        tvName.setText(Constants.NAME);
+        tvEmail.setText(Constants.EMAIL);
+        tvGender.setText(Constants.GENDER);
+        tvBirth.setText(Constants.BIRTH);
+        tvUsername.setText(Constants.USERNAME);
+        tvPassword.setText(Constants.PASSWORD);
 
         imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
         btnEditProfile = (Button) view.findViewById(R.id.btnEditProfile);
