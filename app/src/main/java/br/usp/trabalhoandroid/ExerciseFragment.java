@@ -318,6 +318,12 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         mSensorManager.unregisterListener(this, mAccelerometer);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
     private class ScreenReceiver extends BroadcastReceiver
     {
         public boolean wasScreenOn = true;

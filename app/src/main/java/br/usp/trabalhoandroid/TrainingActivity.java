@@ -217,9 +217,11 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         xAxis.setGranularityEnabled(true);
         xAxis.setGranularity(10f);
         exerciseChart.invalidate();
-        findViewById(R.id.layout_rec).setVisibility(View.GONE);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        toolbar.setVisibility(View.GONE);
+
+        //findViewById(R.id.layout_rec).setVisibility(View.GONE);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        //toolbar.setVisibility(View.GONE);
+
         /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
         final LayoutInflater inflater = getLayoutInflater();
         builder.setTitle(R.string.new_exercise);
