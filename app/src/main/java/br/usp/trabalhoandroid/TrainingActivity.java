@@ -87,10 +87,14 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
             userExercise = (Exercise) exercisePair.second;
         }
 
-        setTitle(getResources().getString(R.string.training).concat(" ").concat(professionalExercise.getName()));
+        if (userExercise != null)
+        {
+            findViewById(R.id.exercise_chart_x).setVisibility(View.VISIBLE);
+            findViewById(R.id.exercise_chart_y).setVisibility(View.VISIBLE);
+            findViewById(R.id.exercise_chart_z).setVisibility(View.VISIBLE);
+        }
 
-        userExercise = new Exercise();
-        userExercise.setName(professionalExercise.getName());
+        setTitle(getResources().getString(R.string.training).concat(" ").concat(professionalExercise.getName()));
 
         recButton = findViewById(R.id.bt_capture);
         recButton.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +119,8 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
 
     private void startRecording()
     {
+        userExercise = new Exercise();
+        userExercise.setName(professionalExercise.getName());
         startRecordSensorValues();
         Toast.makeText(this, getResources().getString(R.string.recording),
                 Toast.LENGTH_LONG).show();
@@ -253,7 +259,7 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
     {
         try
         {
-            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
             Log.d("debug", "STARTED REC");
             return true;
         }
@@ -299,7 +305,7 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         }
         else
         {
-            new CountDownTimer(3100, 1000)
+            new CountDownTimer(3050, 1000)
             {
                 public void onTick(long millisUntilFinished)
                 {

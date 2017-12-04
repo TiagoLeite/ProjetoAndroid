@@ -67,17 +67,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
                 activity.startActivity(intent);
             }
         });
-        Exercise userExercise = (Exercise) exerciseList.get(pos).second;
-        if (userExercise != null)
-        {
-            holder.chart.setVisibility(View.VISIBLE);
-            holder.chart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-        }
 
     }
 
@@ -90,7 +79,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
     {
         ViewGroup root;
         TextView videoTitle;
-        ImageView play, train, chart;
+        ImageView play, train;
 
         public VideoViewHolder(View itemView)
         {
@@ -99,7 +88,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
             root = itemView.findViewById(R.id.row_root);
             play = itemView.findViewById(R.id.image_play);
             train = itemView.findViewById(R.id.image_train);
-            chart = itemView.findViewById(R.id.chart_train);
         }
 
     }

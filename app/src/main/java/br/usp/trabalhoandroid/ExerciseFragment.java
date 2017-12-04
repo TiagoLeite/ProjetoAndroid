@@ -213,7 +213,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     {
         try
         {
-            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
             Log.d("debug", "STARTED REC");
             return true;
         }
