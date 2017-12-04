@@ -42,10 +42,9 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     static final int REQUEST_VIDEO_CAPTURE = 1;
     private View root;
     private Button recButton;
-    private RecyclerView videosRecyclerView;
+    private RecyclerView exercisesRecyclerView;
     private ExerciseAdapter adapter;
-    private List<Exercise> exerciseList = new ArrayList<>();
-    private int sizeSeriesA, sizeSeriesB;
+    private List<AppPair<Exercise, Exercise>> exerciseList = new ArrayList<>();
     private static final int REQUEST_CODE = 0x11;
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -85,14 +84,14 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
 
     private void setupRecyclerView()
     {
-        videosRecyclerView = root.findViewById(R.id.exercises_rv);
-        videosRecyclerView.setHasFixedSize(true);
+        exercisesRecyclerView = root.findViewById(R.id.exercises_rv);
+        exercisesRecyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-        videosRecyclerView.setLayoutManager(llm);
-        exerciseList = loadVideos();
+        exercisesRecyclerView.setLayoutManager(llm);
+        exerciseList = loadExercises("exercises");
         adapter = new ExerciseAdapter((AppCompatActivity) getActivity(), exerciseList);
-        videosRecyclerView.setAdapter(adapter);
+        exercisesRecyclerView.setAdapter(adapter);
     }
 
     private void dispatchVideoRecordIntent()
@@ -135,11 +134,11 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
                             Uri videoUri = data.getData();
                             currentExercise.setName(input.getText().toString());
                             currentExercise.setVideoUriString(videoUri.toString());
-                            exerciseList.add(0, currentExercise);
+                            exerciseList.add(0, new AppPair<Exercise, Exercise>(currentExercise, null));
                             currentExercise.printSeries();
                             adapter.notifyDataSetChanged();
                             currentExercise = null;
-                            saveVideos(exerciseList);
+                            saveExercises(exerciseList, "exercises");
                         }
                     })
                     .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -156,16 +155,17 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     }
 
     @SuppressWarnings("unchecked")
-    private List<Exercise> loadVideos()
+    private List<AppPair<Exercise, Exercise>> loadExercises(String fileName)
     {
         try
         {
-            FileInputStream fis = new FileInputStream(new File(Environment.getExternalStorageDirectory(),"/videos"));
+            FileInputStream fis = new FileInputStream(
+                    new File(Environment.getExternalStorageDirectory(),("/"+fileName)));
             ObjectInputStream ois = new ObjectInputStream(fis);
-            List<Exercise> videos = (List<Exercise>)ois.readObject();
+            List<AppPair<Exercise, Exercise>> pairList = (List<AppPair<Exercise, Exercise>>)ois.readObject();
             ois.close();
             fis.close();
-            return videos;
+            return pairList;
         }
         catch (Exception e)
         {
@@ -174,14 +174,14 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         }
     }
 
-    private void saveVideos(List<Exercise> videos)
+    private void saveExercises(List<AppPair<Exercise, Exercise>> exercises, String fileName)
     {
         try
         {
             FileOutputStream fos = new FileOutputStream(
-                    new File(Environment.getExternalStorageDirectory(),"/videos"), false);
+                    new File(Environment.getExternalStorageDirectory(),("/"+fileName)), false);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(videos);
+            oos.writeObject(exercises);
             oos.close();
             fos.close();
         }
@@ -269,8 +269,6 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
             series[1][k] = (Double.parseDouble(tokens[1])) / 10f;
             series[2][k++] = (Double.parseDouble(tokens[2])) / 10f;
         }
-        sizeSeriesA = k;
-        sizeSeriesB = k;
         Log.d("debug", "size of " + fileName + ": " + k);
         return series;
     }

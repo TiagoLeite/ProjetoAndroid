@@ -1,33 +1,29 @@
 package br.usp.trabalhoandroid;
 
-import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -35,6 +31,11 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,10 +48,11 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
     private static final int REQUEST_CODE = 0x11;
     private Button recButton;
     private boolean isRecording = false;
-    private LineChart exerciseChart;
+    private LineChart exerciseChartX, exerciseChartY, exerciseChartZ;
     private Toolbar toolbar;
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,10 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        exerciseChart = findViewById(R.id.exercise_chart);
+        exerciseChartX = findViewById(R.id.exercise_chart_x);
+        exerciseChartY = findViewById(R.id.exercise_chart_y);
+        exerciseChartZ = findViewById(R.id.exercise_chart_z);
+
 
         if (mAccelerometer == null || mSensorManager == null)
             Log.d("debug", "NULL");
@@ -73,7 +78,14 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        professionalExercise = (Exercise) getIntent().getExtras().getSerializable("exercise");
+        AppPair<Exercise, Exercise> exercisePair =
+                (AppPair<Exercise, Exercise>)(getIntent().getExtras().getSerializable("exercise"));
+
+        if (exercisePair != null)
+        {
+            professionalExercise = (Exercise) exercisePair.first;
+            userExercise = (Exercise) exercisePair.second;
+        }
 
         setTitle(getResources().getString(R.string.training).concat(" ").concat(professionalExercise.getName()));
 
@@ -85,7 +97,6 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
             @Override
             public void onClick(View view)
             {
-                findViewById(R.id.rec_info).setVisibility(View.INVISIBLE);
                 //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 handleRecording();
             }
@@ -119,11 +130,16 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         recButton.setOnClickListener(null);
         Toast.makeText(this, getResources().getString(R.string.recorded), Toast.LENGTH_LONG).show();
         //userExercise.printSeries();
-        showExerciseResults();
+        showExerciseChart(0, exerciseChartX);
+        showExerciseChart(1, exerciseChartY);
+        showExerciseChart(2, exerciseChartZ);
+        findViewById(R.id.chart_layout).setVisibility(View.VISIBLE);
+
     }
 
-    private void showExerciseResults()
+    private void showExerciseChart(int axis, LineChart exerciseChart)
     {
+        String[] titles = new String[]{"Acelerômetro: Eixo X", "Acelerômetro: Eixo Y", "Acelerômetro: Eixo Z"};
         List<Entry> entries = new ArrayList<>();
         List<Entry> entriesPro = new ArrayList<>();
 
@@ -131,7 +147,7 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         double seriesPro[][] =  professionalExercise.getSeries();
 
         for (int i = 0; i < userExercise.getSizeSeries(); i++)
-            entries.add(new Entry(i, (float) series[0][i]));
+            entries.add(new Entry(i, (float) series[axis][i]));
 
         LineDataSet dataSet = new LineDataSet(entries, "Usuário");
         dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -148,9 +164,8 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         dataSet.setMode(LineDataSet.Mode.LINEAR);
         dataSet.setFillColor(getResources().getColor(R.color.transparent));
 
-
         for (int i = 0; i < professionalExercise.getSizeSeries(); i++)
-            entriesPro.add(new Entry(i, (float) seriesPro[0][i]));
+            entriesPro.add(new Entry(i, (float) seriesPro[axis][i]));
 
         LineDataSet dataSetPro = new LineDataSet(entriesPro, "Profissional");
         dataSetPro.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -173,6 +188,12 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         dataSets.add(dataSet);
         dataSets.add(dataSetPro);
 
+        Description description = new Description();
+        description.setTextSize(14);
+        description.setText(titles[axis]);
+        exerciseChart.setDescription(description);
+
+
         LineData data = new LineData(dataSets);
         exerciseChart.setData(data);
         exerciseChart.setVisibility(View.VISIBLE);
@@ -182,23 +203,20 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         exerciseChart.getAxisRight().setDrawGridLines(false);
         exerciseChart.setDrawGridBackground(false);
         exerciseChart.setDrawBorders(true);
-        exerciseChart.setBorderColor(getResources().getColor(R.color.gray));
-        exerciseChart.getDescription().setEnabled(false);
-        //exerciseChart.getLegend().setEnabled(false);
+        //exerciseChart.setBorderColor(getResources().getColor(R.color.gray));
+        exerciseChart.getLegend().setEnabled(true);
         exerciseChart.getXAxis().setEnabled(true);
-        exerciseChart.getAxisLeft().setDrawGridLines(false);
-        exerciseChart.getAxisRight().setDrawGridLines(false);
-        exerciseChart.getXAxis().setDrawGridLines(false);
         exerciseChart.setScaleEnabled(false);
         exerciseChart.setPinchZoom(true);
         exerciseChart.setDoubleTapToZoomEnabled(true);
-        exerciseChart.setVisibleXRangeMaximum(200f);
-        exerciseChart.setVisibleYRangeMaximum(10f, YAxis.AxisDependency.LEFT);
-        exerciseChart.invalidate();
+        exerciseChart.setVisibleXRangeMaximum(240f);
+        //exerciseChart.setVisibleYRangeMaximum(10f, YAxis.AxisDependency.LEFT);
         //chart.setDragOffsetX(10);
+        exerciseChart.setBackgroundColor(getResources().getColor(R.color.transparent));
         XAxis xAxis = exerciseChart.getXAxis();
         xAxis.setGranularityEnabled(true);
         xAxis.setGranularity(10f);
+        exerciseChart.invalidate();
         findViewById(R.id.layout_rec).setVisibility(View.GONE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         toolbar.setVisibility(View.GONE);
@@ -313,5 +331,14 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         super.onPause();
         mSensorManager.unregisterListener(this, mAccelerometer);
         //userExercise = null;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        //super.onBackPressed();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("exercise", userExercise);
+        startActivity(intent);
     }
 }

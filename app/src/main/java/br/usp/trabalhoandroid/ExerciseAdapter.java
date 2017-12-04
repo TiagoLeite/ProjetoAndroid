@@ -11,20 +11,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.Serializable;
 import java.util.List;
 
 
 public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoViewHolder>
 {
     AppCompatActivity activity;
-    List<Exercise> exerciseList;
+    List<AppPair<Exercise, Exercise>> exerciseList;
 
-    public ExerciseAdapter(AppCompatActivity activity, List<Exercise> videos)
+    public ExerciseAdapter(AppCompatActivity activity, List<AppPair<Exercise, Exercise>> exercises)
     {
-        exerciseList = videos;
+        exerciseList = exercises;
         this.activity = activity;
     }
 
@@ -40,9 +40,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
     @Override
     public void onBindViewHolder(ExerciseAdapter.VideoViewHolder holder, int position) {
 
-        holder.videoTitle.setText(exerciseList.get(position).getName());
-
         final int pos = holder.getAdapterPosition();
+        final AppPair<Exercise, Exercise> exercises = exerciseList.get(pos);
+        final Exercise exercisePro = (Exercise) exercises.first;
+        holder.videoTitle.setText(exercisePro.getName());
 
         holder.play.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +54,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
                 root_view.findViewById(R.id.videoView).setVisibility(View.VISIBLE);
                 root_view.findViewById(R.id.toolbar).setVisibility(View.GONE);
                 //activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                playVideo(exerciseList.get(pos), root_view);
+                playVideo(exercisePro, root_view);
             }
         });
 
@@ -62,10 +63,21 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
             public void onClick(View view)
             {
                 Intent intent = new Intent(activity, TrainingActivity.class);
-                intent.putExtra("exercise", exerciseList.get(pos));
+                intent.putExtra("exercise", exercises);
                 activity.startActivity(intent);
             }
         });
+        Exercise userExercise = (Exercise) exerciseList.get(pos).second;
+        if (userExercise != null)
+        {
+            holder.chart.setVisibility(View.VISIBLE);
+            holder.chart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        }
 
     }
 
@@ -78,7 +90,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
     {
         ViewGroup root;
         TextView videoTitle;
-        ImageView play, train;
+        ImageView play, train, chart;
 
         public VideoViewHolder(View itemView)
         {
@@ -87,6 +99,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
             root = itemView.findViewById(R.id.row_root);
             play = itemView.findViewById(R.id.image_play);
             train = itemView.findViewById(R.id.image_train);
+            chart = itemView.findViewById(R.id.chart_train);
         }
 
     }
@@ -98,11 +111,11 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
         root.findViewById(R.id.list_exercises_container).setVisibility(View.VISIBLE);
     }
 
-    private void playVideo(Exercise video, final View root)
+    private void playVideo(Exercise exercise, final View root)
     {
         VideoView videoView = root.findViewById(R.id.videoView);
-        Uri videoUri = Uri.parse(video.getVideoUriString());
-        exerciseList.add(video);
+        Uri videoUri = Uri.parse(exercise.getVideoUriString());
+        //exerciseList.add(new AppPair<Exercise, Exercise>(exercise, null));
         videoView.setVideoURI(videoUri);
         videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override

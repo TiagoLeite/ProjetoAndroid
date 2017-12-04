@@ -14,7 +14,7 @@ public class Exercise implements Serializable
     public Exercise()
     {
         this.series = new double[3][2048]; // x, y, z, with 2048 values each one
-        sizeSeries = 0;
+        this.sizeSeries = 0;
     }
 
     public void setName(String name) {
