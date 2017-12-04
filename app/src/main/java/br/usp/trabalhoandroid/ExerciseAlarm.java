@@ -109,7 +109,7 @@ public class ExerciseAlarm extends BroadcastReceiver
         next.set(Calendar.MINUTE, getAlarmMinute(context));
         next.set(Calendar.SECOND, 0);
         next.set(Calendar.MILLISECOND, 0);
-        next.add(Calendar.DAY_OF_YEAR, 1);
+        next.add(Calendar.DAY_OF_MONTH, 1);
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
 
         if (android.os.Build.VERSION.SDK_INT > 22)
