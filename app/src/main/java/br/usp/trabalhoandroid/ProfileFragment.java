@@ -31,7 +31,7 @@ public class ProfileFragment extends Fragment {
 
     public static final int CAMERA_PIC_REQUEST = 1;
     ImageView imgProfilePic;
-    Button btnChangePic;
+    Button btnChangePic, btnEditProfile;
     final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/picFolder/";
 
     @Override
@@ -41,13 +41,23 @@ public class ProfileFragment extends Fragment {
         getActivity().setTitle("Perfil");
 
         imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
+        btnEditProfile = (Button) view.findViewById(R.id.btnEditProfile);
         btnChangePic = (Button) view.findViewById(R.id.btnChangeProfilePic);
+
         loadImageFromStorage("/data/user/0/br.usp.trabalhoandroid/app_imageDir");
 
         btnChangePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
+            }
+        });
+
+        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -79,7 +89,7 @@ public class ProfileFragment extends Fragment {
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         Log.d("DIR: ", directory.getPath());
         // Create imageDir
-        File mypath=new File(directory,"profile.jpg");
+        File mypath=new File(directory,Constants.USERNAME + ".jpg");
 
         FileOutputStream fos = null;
         try {
@@ -102,13 +112,13 @@ public class ProfileFragment extends Fragment {
     {
 
         try {
-            File f=new File(path, "profile.jpg");
+            File f=new File(path, Constants.USERNAME + ".jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
             imgProfilePic.setImageBitmap(b);
         }
         catch (FileNotFoundException e)
         {
-            e.printStackTrace();
+
         }
 
     }

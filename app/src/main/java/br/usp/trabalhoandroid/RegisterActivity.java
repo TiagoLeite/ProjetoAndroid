@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -204,11 +205,18 @@ public class RegisterActivity extends AppCompatActivity {
         if(!checkField(etUsername)) return false;
         if(!checkField(etPassword)) return false;
         if(!checkField(etConfirmPassword)) return false;
+        if(!checkRadioButtons()) return false;
 
         if(!checkPassword()) {
             etConfirmPassword.setError(getString(R.string.wrongPasswords));
             return false;
         }
+
+        return true;
+    }
+
+    private boolean checkRadioButtons(){
+        if(!rbSexF.isChecked() && !rbSexM.isChecked()) return false;
 
         return true;
     }
