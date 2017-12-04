@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity{
             Constants.NAME = prefs.getString("name", null);
             Constants.EMAIL = prefs.getString("email", null);
             Constants.BIRTH = prefs.getString("birth", null);
+            Constants.GENDER = prefs.getString("gender", null);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             LoginActivity.this.startActivity(intent);
         }
