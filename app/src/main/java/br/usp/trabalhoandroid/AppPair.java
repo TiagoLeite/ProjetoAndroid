@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 public class AppPair<E, T>  implements Serializable
 {
+    private static int id_count = 0;
+    private int id;
     public E first;
     public T second;
 
@@ -11,5 +13,10 @@ public class AppPair<E, T>  implements Serializable
     {
         this.first = first;
         this.second = second;
+        this.id = id_count++;
+    }
+
+    public int getId() {
+        return id;
     }
 }

@@ -53,6 +53,8 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
     private boolean isRecording = false;
     private LineChart exerciseChartX, exerciseChartY, exerciseChartZ;
     private Toolbar toolbar;
+    private AppPair<Exercise, Exercise> exercisePair;
+    public static int TRAINING_REQ_CODE = 2;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -71,16 +73,10 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
         exerciseChartY = findViewById(R.id.exercise_chart_y);
         exerciseChartZ = findViewById(R.id.exercise_chart_z);
 
-        if (mAccelerometer == null || mSensorManager == null)
-            Log.d("debug", "NULL");
-        else
-            Log.d("debug", "not NULL");
-
-
         if (getSupportActionBar() != null)
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        AppPair<Exercise, Exercise> exercisePair =
+        exercisePair =
                 (AppPair<Exercise, Exercise>)(getIntent().getExtras().getSerializable("exercise"));
 
         if (exercisePair != null)
@@ -91,10 +87,16 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
 
         if (userExercise != null)
         {
-            findViewById(R.id.exercise_chart_x).setVisibility(View.VISIBLE);
-            findViewById(R.id.exercise_chart_y).setVisibility(View.VISIBLE);
-            findViewById(R.id.exercise_chart_z).setVisibility(View.VISIBLE);
+            showExerciseChart(0, exerciseChartX);
+            showExerciseChart(1, exerciseChartY);
+            showExerciseChart(2, exerciseChartZ);
+            exerciseChartX.setVisibility(View.VISIBLE);
+            exerciseChartY.setVisibility(View.VISIBLE);
+            exerciseChartZ.setVisibility(View.VISIBLE);
         }
+        else
+            Log.d("debug", "second null");
+
 
         setTitle(getResources().getString(R.string.training).concat(" ").concat(professionalExercise.getName()));
 
@@ -114,7 +116,9 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
     public boolean onOptionsItemSelected(MenuItem item)
     {
         if (item.getItemId() == android.R.id.home)
+        {
             finish();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -133,16 +137,18 @@ public class TrainingActivity extends AppCompatActivity implements SensorEventLi
     private void stopRecording()
     {
         stopRecordSensorValues();
+        exercisePair.second = userExercise;
+        Intent intent = new Intent("update_exercise");
+        intent.putExtra("exercise_2", exercisePair);
+        sendBroadcast(intent);
         isRecording = false;
         recButton.setText(getResources().getString(R.string.recorded));
         recButton.setOnClickListener(null);
         Toast.makeText(this, getResources().getString(R.string.recorded), Toast.LENGTH_LONG).show();
-        //userExercise.printSeries();
         showExerciseChart(0, exerciseChartX);
         showExerciseChart(1, exerciseChartY);
         showExerciseChart(2, exerciseChartZ);
         findViewById(R.id.chart_layout).setVisibility(View.VISIBLE);
-
     }
 
     private void showExerciseChart(int axis, LineChart exerciseChart)

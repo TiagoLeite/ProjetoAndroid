@@ -3,6 +3,7 @@ package br.usp.trabalhoandroid;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.media.tv.TvContentRating;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -64,7 +65,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
             {
                 Intent intent = new Intent(activity, TrainingActivity.class);
                 intent.putExtra("exercise", exercises);
-                activity.startActivity(intent);
+                activity.startActivityForResult(intent, TrainingActivity.TRAINING_REQ_CODE);
             }
         });
 
@@ -73,6 +74,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.VideoV
     @Override
     public int getItemCount() {
         return exerciseList.size();
+    }
+
+    public void setDataset(List<AppPair<Exercise,Exercise>> dataset) {
+        this.exerciseList = dataset;
     }
 
     class VideoViewHolder extends RecyclerView.ViewHolder

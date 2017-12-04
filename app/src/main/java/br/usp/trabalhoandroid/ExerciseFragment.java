@@ -25,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,10 +59,17 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         super.onCreateView(inflater, container, savedInstanceState);
         root = inflater.inflate(R.layout.exercise_fragment, container, false);
         getActivity().setTitle("Exercícios");
-        setupRecyclerView();
         setupFab();
+        setupRecyclerView();
+
+        MyReceiver receiver = new MyReceiver();
+        getActivity().registerReceiver(receiver, new IntentFilter("update_exercise"));
+
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        Log.d("debug", "Create view");
+
         return root;
     }
 
@@ -76,6 +84,11 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
                 dispatchVideoRecordIntent();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void setupRecyclerView()
@@ -100,6 +113,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onActivityResult(int requestCode, int resultCode, final Intent data)
     {
         if (resultCode != RESULT_OK)
@@ -316,5 +330,44 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         //mSensorManager.unregisterListener(this, mAccelerometer);
     }
 
+    public void setExerciseList(List<AppPair<Exercise, Exercise>> exerciseList) {
+        this.exerciseList = exerciseList;
+    }
 
+    public List<AppPair<Exercise, Exercise>> getExerciseList() {
+        return exerciseList;
+    }
+
+    public void update()
+    {
+        adapter.notifyDataSetChanged();
+    }
+
+
+    @SuppressWarnings("unchecked")
+    private class MyReceiver extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            AppPair<Exercise, Exercise> exercisePair =
+                    (AppPair<Exercise, Exercise>)intent.getSerializableExtra("exercise_2");
+            if (exercisePair != null)
+            {
+                int pos = 0;
+                for (AppPair pair : exerciseList)
+                {
+                    if (pair.getId() == exercisePair.getId())
+                    {
+                        exerciseList.set(pos, exercisePair);
+                        adapter.setDataset(exerciseList);
+                        adapter.notifyDataSetChanged();
+                        break;
+                    }
+                    pos++;
+                }
+            }
+            Log.d("debug", this.getClass().toString()+"REsult");
+        }
+    }
 }
