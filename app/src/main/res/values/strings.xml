@@ -12,8 +12,18 @@
     <string name="emptyField">This field cannot be empty</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
-    <string name="profile">PROFILE</string>
-    <string name="changeProfilePic">CHANGE PROFILE PICTURE</string>
-    <string name="saveChanges">SAVE CHANGES</string>
-    <string name="editProfile">EDIT PROFILE</string>
+    <string name="exercise_title">Exercício</string>
+    <string name="lets_exercise">Hora de exercitar-se</string>
+    <string name="alarm_open">Abrir</string>
+    <string name="time">Time:</string>
+    <string name="alarm">Alarme de exercícios</string>
+    <string name="language">Idioma</string>
+    <string name="portuguese">Português</string>
+    <string name="english">Inglês</string>
+    <string name="exercise">Exercício</string>
+    <string name="new_exercise">Novo exercício</string>
+    <string name="cancel">Cancelar</string>
+    <string name="recording">Gravando...</string>
+    <string name="recorded">Gravado com sucesso</string>
+    <string name="training">Treino</string>
 </resources>

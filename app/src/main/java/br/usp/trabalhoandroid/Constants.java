@@ -1,11 +1,8 @@
 package br.usp.trabalhoandroid;
 
-/**
- * Created by Gabriel on 02/12/2017.
- */
-
 public class Constants {
 
+    // Webhost Constants
     public static final String DB_URL = "https://bd-android.000webhostapp.com/";
 
     public static final String REGISTER_URL = DB_URL + "register.php";
@@ -16,6 +13,15 @@ public class Constants {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_GENDER = "gender";
     public static final String KEY_BIRTH = "birth";
+    public static final String KEY_USERNAME = "username";
 
-    public static final int CAMERA_PIC_REQUEST = 1;
+    // User constants... we can create a User class later, if necessary.
+    public static String NAME;
+    public static String EMAIL;
+    public static String PASSWORD;
+    public static String GENDER;
+    public static String BIRTH;
+    public static String USERNAME;
+
+    public static final String LOGIN_PREFS = "LoginPrefs";
 }

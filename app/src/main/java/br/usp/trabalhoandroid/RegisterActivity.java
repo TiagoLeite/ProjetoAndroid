@@ -2,6 +2,7 @@ package br.usp.trabalhoandroid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -23,6 +24,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegisterActivity extends AppCompatActivity {
 
     EditText etName, etBirthDateDay, etBirthDateMonth, etBirthDateYear, etEmail, etUsername, etPassword, etConfirmPassword;
@@ -31,11 +35,13 @@ public class RegisterActivity extends AppCompatActivity {
     Button btnRegister;
     Context context;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        final SharedPreferences.Editor editor = getSharedPreferences(Constants.LOGIN_PREFS, MODE_PRIVATE).edit();
         context = this;
         etName = (EditText) findViewById(R.id.etName);
         etBirthDateDay = (EditText) findViewById(R.id.etBirthDateDay);
@@ -119,41 +125,69 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (checkInput()) {
                     String name = etName.getText().toString();
-                    String birthDate = etBirthDateDay.getText().toString() + "/" + etBirthDateMonth.getText().toString() + "/" + etBirthDateYear.getText().toString();
-                    String email = etEmail.getText().toString();
-                    String username = etUsername.getText().toString();
-                    String password = etPassword.getText().toString();
-                    String confirmPassword = etConfirmPassword.getText().toString();
-                    String gender;
+                    final String birthDate = etBirthDateDay.getText().toString() + "/" + etBirthDateMonth.getText().toString() + "/" + etBirthDateYear.getText().toString();
+                    final String email = etEmail.getText().toString();
+                    final String username = etUsername.getText().toString();
+                    final String password = etPassword.getText().toString();
+                    final String confirmPassword = etConfirmPassword.getText().toString();
+                    final String gender;
                     if (rbSexM.isChecked())
                         gender = "male";
                     else
                         gender = "female";
+                    Constants.NAME = name;
+                    Constants.EMAIL = email;
+                    Constants.PASSWORD = password;
+                    Constants.BIRTH = birthDate;
+                    Constants.GENDER = gender;
+                    Constants.USERNAME = username;
 
                     //name, email, gender, birth, password
 
+                    // Register Request
                     StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.REGISTER_URL,
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
+                                    if(response.contains("Registration successfully!")){
+                                        Toast.makeText(context, "Registration successfully. Welcome!", Toast.LENGTH_LONG).show();
+                                        editor.putString("username", Constants.USERNAME);
+                                        editor.putString("email", Constants.EMAIL);
+                                        editor.putString("name", Constants.NAME);
+                                        editor.putString("password", Constants.PASSWORD);
+                                        editor.putString("birth", Constants.BIRTH);
+                                        editor.putString("gender", Constants.GENDER);
+                                        editor.apply();
+                                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
 
+                                        startActivity(intent);
+                                    }
+                                    else
+                                        Toast.makeText(context, response.toString(), Toast.LENGTH_LONG).show();
                                 }
                             }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(getApplicationContext(), "There was a connection error. Please, try again.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "There was a connection error. Please, try again.", Toast.LENGTH_LONG).show();
                         }
-                    });
+                    }){
+                        @Override
+                        protected Map<String, String> getParams(){
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put(Constants.KEY_NAME, Constants.NAME);
+                            params.put(Constants.KEY_EMAIL, Constants.EMAIL);
+                            params.put(Constants.KEY_BIRTH, Constants.BIRTH);
+                            params.put(Constants.KEY_GENDER, Constants.GENDER);
+                            params.put(Constants.KEY_PASSWORD, Constants.PASSWORD);
+                            params.put(Constants.KEY_USERNAME, Constants.USERNAME);
+                            return params;
+                        }
+
+                    };
                     MySingleton.getInstance(context).addToRequestQueue(stringRequest);
 
-                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                    intent.putExtra("username", username);
-                    intent.putExtra("password", password);
-
-
-                    startActivity(intent);
                 } else {
-
+                    Toast.makeText(context, "Please, check the fields.", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -161,6 +195,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private boolean checkInput(){
+
         if(!checkField(etName)) return false;
         if(!checkField(etBirthDateDay)) return false;
         if(!checkField(etBirthDateMonth)) return false;

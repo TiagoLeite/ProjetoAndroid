@@ -13,8 +13,18 @@
     <string name="emptyField">Esse campo precisa ser preenchido</string>
     <string name="open">Abrir</string>
     <string name="close">Fechar</string>
-    <string name="profile">PERFIL</string>
-    <string name="changeProfilePic">TROCAR FOTO DE PERFIL</string>
-    <string name="saveChanges">SALVAR MUDANÇAS</string>
-    <string name="editProfile">EDITAR PERFIL</string>
+    <string name="exercise_title">Exercício</string>
+    <string name="lets_exercise">Hora de exercitar-se</string>
+    <string name="alarm_open">Abrir</string>
+    <string name="time">Horário:</string>
+    <string name="alarm">Alarme de exercícios</string>
+    <string name="language">Idioma</string>
+    <string name="portuguese">Português</string>
+    <string name="english">Inglês</string>
+    <string name="exercise">Exercício</string>
+    <string name="new_exercise">Novo exercício</string>
+    <string name="cancel">Cancelar</string>
+    <string name="recording">Gravando...</string>
+    <string name="recorded">Gravado com sucesso</string>
+    <string name="training">Treino</string>
 </resources>
