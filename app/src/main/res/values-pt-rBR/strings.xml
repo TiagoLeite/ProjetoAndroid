@@ -13,4 +13,8 @@
     <string name="emptyField">Esse campo precisa ser preenchido</string>
     <string name="open">Abrir</string>
     <string name="close">Fechar</string>
+    <string name="profile">PERFIL</string>
+    <string name="changeProfilePic">TROCAR FOTO DE PERFIL</string>
+    <string name="saveChanges">SALVAR MUDANÇAS</string>
+    <string name="editProfile">EDITAR PERFIL</string>
 </resources>

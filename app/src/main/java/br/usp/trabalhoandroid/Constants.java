@@ -16,4 +16,6 @@ public class Constants {
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_GENDER = "gender";
     public static final String KEY_BIRTH = "birth";
+
+    public static final int CAMERA_PIC_REQUEST = 1;
 }

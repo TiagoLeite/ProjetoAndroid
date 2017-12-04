@@ -12,4 +12,8 @@
     <string name="emptyField">This field cannot be empty</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="profile">PROFILE</string>
+    <string name="changeProfilePic">CHANGE PROFILE PICTURE</string>
+    <string name="saveChanges">SAVE CHANGES</string>
+    <string name="editProfile">EDIT PROFILE</string>
 </resources>
