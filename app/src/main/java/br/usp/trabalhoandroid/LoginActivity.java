@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity{
                         Toast.makeText(context, "Please, insert a valid password.", Toast.LENGTH_LONG).show();
                     else{
                         // Login Request
-                       // RequestQueue queue = Volley.newRequestQueue(context);
+                        // RequestQueue queue = Volley.newRequestQueue(context);
                         StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.LOGIN_URL,
                                 new Response.Listener<String>()
                                 {
@@ -158,5 +158,10 @@ public class LoginActivity extends AppCompatActivity{
 
         etUsername.setText(getIntent().getStringExtra("username"));
         etPassword.setText(getIntent().getStringExtra("password"));
+    }
+
+    @Override
+    public void onBackPressed(){
+
     }
 }
