@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,8 +32,10 @@ public class ProfileFragment extends Fragment {
 
     public static final int CAMERA_PIC_REQUEST = 1;
     ImageView imgProfilePic;
-    Button btnChangePic;
+    Button btnChangePic, btnEditProfile;
     final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/picFolder/";
+    //TextView tvName;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,14 +43,38 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         getActivity().setTitle("Perfil");
 
+        TextView tvName = (TextView) view.findViewById(R.id.tvName);
+        TextView tvEmail = (TextView) view.findViewById(R.id.tvEmail);
+        TextView tvGender = (TextView) view.findViewById(R.id.tvSex);
+        TextView tvBirth = (TextView) view.findViewById(R.id.tvBirth);
+        TextView tvUsername = (TextView) view.findViewById(R.id.tvUsername);
+        TextView tvPassword = (TextView) view.findViewById(R.id.tvPassword);
+
+        tvName.setText(Constants.NAME);
+        tvEmail.setText(Constants.EMAIL);
+        tvGender.setText(Constants.GENDER);
+        tvBirth.setText(Constants.BIRTH);
+        tvUsername.setText(Constants.USERNAME);
+        tvPassword.setText(Constants.PASSWORD);
+
         imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
+        btnEditProfile = (Button) view.findViewById(R.id.btnEditProfile);
         btnChangePic = (Button) view.findViewById(R.id.btnChangeProfilePic);
+
         loadImageFromStorage("/data/user/0/br.usp.trabalhoandroid/app_imageDir");
 
         btnChangePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
+            }
+        });
+
+        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -79,7 +106,7 @@ public class ProfileFragment extends Fragment {
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         Log.d("DIR: ", directory.getPath());
         // Create imageDir
-        File mypath=new File(directory,"profile.jpg");
+        File mypath=new File(directory,Constants.USERNAME + ".jpg");
 
         FileOutputStream fos = null;
         try {
@@ -102,13 +129,13 @@ public class ProfileFragment extends Fragment {
     {
 
         try {
-            File f=new File(path, "profile.jpg");
+            File f=new File(path, Constants.USERNAME + ".jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
             imgProfilePic.setImageBitmap(b);
         }
         catch (FileNotFoundException e)
         {
-            e.printStackTrace();
+
         }
 
     }

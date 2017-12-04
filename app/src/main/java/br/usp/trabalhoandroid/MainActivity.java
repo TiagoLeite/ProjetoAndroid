@@ -2,6 +2,8 @@ package br.usp.trabalhoandroid;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.support.annotation.FloatRange;
 import android.support.v4.app.Fragment;
@@ -20,8 +22,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private Map<String, Fragment> fragmentMap;
     TextView TVWelcome;
+    ImageView profilePic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -75,6 +82,11 @@ public class MainActivity extends AppCompatActivity {
         fragmentMap.put("Configurações", new SettingsFragment());
         fragmentMap.put("Sair", new SettingsFragment());
         drawerLayout.openDrawer(GravityCompat.START);
+
+        View a = findViewById(R.id.drawer_view);
+        profilePic = (ImageView) a.findViewById(R.id.profilePicIcon);
+        if(profilePic == null) Log.d("ERROR", "AAAAA");
+        loadImageFromStorage("/data/user/0/br.usp.trabalhoandroid/app_imageDir");
 
     }
 
@@ -192,5 +204,20 @@ public class MainActivity extends AppCompatActivity {
         public String getItemText() {
             return itemText;
         }
+    }
+
+    public void loadImageFromStorage(String path)
+    {
+
+        try {
+            File f=new File(path, Constants.USERNAME + ".jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            profilePic.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+
+        }
+
     }
 }

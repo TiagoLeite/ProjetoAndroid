@@ -29,4 +29,6 @@
     <string name="profile">PROFILE</string>
     <string name="changeProfilePic">CHANGE PROFILE PICTURE</string>
     <string name="editProfile">EDIT PROFILE</string>
+    <string name="saveChanges">SAVE CHANGES</string>
+    <string name="captureMovement">CAPTURE MOVEMENT</string>
 </resources>

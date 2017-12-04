@@ -4,11 +4,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="120dp"
     android:gravity="center|start"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    android:id="@+id/drawer_header">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"/>
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:src="@drawable/default_profile_pic"
+        android:paddingLeft="20dp"
+        android:id="@+id/profilePicIcon"/>
 
 </LinearLayout>

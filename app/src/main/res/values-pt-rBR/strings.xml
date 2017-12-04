@@ -4,7 +4,7 @@
     <string name="password">Senha:</string>
     <string name="register">CADASTRE-SE</string>
     <string name="name">Nome:</string>
-    <string name="birthdate">Data de Nascimento:</string>
+    <string name="birthdate">Data de\nNascimento:</string>
     <string name="sex">Sexo:</string>
     <string name="email">Email:</string>
     <string name="confirmPassword">Confirme a Senha:</string>
@@ -30,4 +30,6 @@
     <string name="profile">PERFIL</string>
     <string name="changeProfilePic">TROCAR FOTO DE PERFIL</string>
     <string name="editProfile">EDITAR PERFIL</string>
+    <string name="saveChanges">SALVAR MUDANÇAS</string>
+    <string name="captureMovement">CAPTURAR MOVIMENTO</string>
 </resources>
