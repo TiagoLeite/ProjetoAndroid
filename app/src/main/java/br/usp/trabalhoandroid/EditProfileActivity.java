@@ -1,11 +1,31 @@
 package br.usp.trabalhoandroid;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Victor on 04/12/2017.
@@ -15,12 +35,16 @@ public class EditProfileActivity extends AppCompatActivity {
 
     EditText etName, etBirthDateDay, etBirthDateMonth, etBirthDateYear, etEmail, etPassword, etConfirmPassword;
     RadioButton rbSexM, rbSexF;
+    Button btSave;
+    Context context;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        final SharedPreferences.Editor editor = getSharedPreferences(Constants.LOGIN_PREFS, MODE_PRIVATE).edit();
+        context = this;
         etName = (EditText) findViewById(R.id.etName);
         etBirthDateDay = (EditText) findViewById(R.id.etBirthDateDay);
         etBirthDateMonth = (EditText) findViewById(R.id.etBirthDateMonth);
@@ -30,6 +54,7 @@ public class EditProfileActivity extends AppCompatActivity {
         etConfirmPassword = (EditText) findViewById(R.id.etConfirmPassword);
         rbSexF = (RadioButton) findViewById(R.id.rbSexF);
         rbSexM = (RadioButton) findViewById(R.id.rbSexM);
+        btSave = (Button) findViewById(R.id.btnOKRegister);
 
         String birthDate = Constants.BIRTH;
         etName.setText(Constants.NAME);
@@ -45,6 +70,85 @@ public class EditProfileActivity extends AppCompatActivity {
                 rbSexF.toggle();
             } else rbSexM.toggle();
         }
+
+        btSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String name = etName.getText().toString();
+                final String birthDate = etBirthDateDay.getText().toString() + "/" + etBirthDateMonth.getText().toString() + "/" + etBirthDateYear.getText().toString();
+                final String email = etEmail.getText().toString();
+                final String password = etPassword.getText().toString();
+                final String confirmPassword = etConfirmPassword.getText().toString();
+                final String gender;
+                if (rbSexM.isChecked())
+                    gender = "M";
+                else
+                    gender = "F";
+                Constants.NAME = name;
+                Constants.EMAIL = email;
+                Constants.PASSWORD = password;
+                Constants.BIRTH = birthDate;
+                Constants.GENDER = gender;
+
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.UPDATE_URL,
+                        new Response.Listener<String>()
+                        {
+                            @Override
+                            public void onResponse(String response) {
+                                    Log.d("onResponse", "Entrou");
+                                    if(response.contains("Update successfully!")) {
+
+                                        editor.putString("email", Constants.EMAIL);
+                                        editor.putString("name", Constants.NAME);
+                                        editor.putString("password", Constants.PASSWORD);
+                                        editor.putString("birth", Constants.BIRTH);
+                                        editor.putString("gender", Constants.GENDER);
+                                        editor.apply();
+
+                                        Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
+                                        EditProfileActivity.this.startActivity(intent);
+                                        Toast.makeText(context, "Update successfully!",
+                                                Toast.LENGTH_LONG).show();
+
+                                    } else if(response.contains("There was a error during update. Please, try again.")) {
+                                        Toast.makeText(context, "Error during update. Please, try again later.",
+                                                Toast.LENGTH_LONG).show();
+                                        Log.d("Error", response);
+                                        if (response.contains("5"))
+                                            Toast.makeText(context, "555", Toast.LENGTH_LONG).show();
+                                    }
+                                    else if(response.contains("ID saved")) {
+                                        Toast.makeText(context, "ID SAVDE", Toast.LENGTH_LONG).show();
+
+                                    }
+                            }
+                        },
+                        new Response.ErrorListener()
+                        {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
+                                Log.d("Error", error.toString());
+                            }
+                        }
+                ) {
+                    @Override
+                    protected Map<String, String> getParams()
+                    {
+                        Map<String, String>  params = new HashMap<String, String>();
+                        params.put(Constants.KEY_NAME, Constants.NAME);
+                        params.put(Constants.KEY_EMAIL, Constants.EMAIL);
+                        params.put(Constants.KEY_BIRTH, Constants.BIRTH);
+                        params.put(Constants.KEY_GENDER, Constants.GENDER);
+                        params.put(Constants.KEY_PASSWORD, Constants.PASSWORD);
+                        params.put(Constants.KEY_USERNAME, Constants.USERNAME);
+                        return params;
+                    }
+                };
+                RequestQueue queue = Volley.newRequestQueue(EditProfileActivity.this);
+                queue.add(stringRequest);
+            }
+        });
 
     }
 }
