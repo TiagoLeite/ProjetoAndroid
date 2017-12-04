@@ -27,4 +27,7 @@
     <string name="recording">Gravando...</string>
     <string name="recorded">Gravado com sucesso</string>
     <string name="training">Treino</string>
+    <string name="profile">PERFIL</string>
+    <string name="changeProfilePic">TROCAR FOTO DE PERFIL</string>
+    <string name="editProfile">EDITAR PERFIL</string>
 </resources>

@@ -29,6 +29,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
 
+    public static final int CAMERA_PIC_REQUEST = 1;
     ImageView imgProfilePic;
     Button btnChangePic;
     final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/picFolder/";
@@ -56,14 +57,14 @@ public class ProfileFragment extends Fragment {
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, Constants.CAMERA_PIC_REQUEST);
+            startActivityForResult(takePictureIntent, CAMERA_PIC_REQUEST);
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
-            case Constants.CAMERA_PIC_REQUEST:
+            case CAMERA_PIC_REQUEST:
                 if (resultCode == RESULT_OK) {
                     Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
                     saveToInternalStorage(thumbnail);
