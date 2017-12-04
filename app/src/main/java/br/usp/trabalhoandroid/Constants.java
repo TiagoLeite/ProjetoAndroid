@@ -22,4 +22,6 @@ public class Constants {
     public static String GENDER;
     public static String BIRTH;
     public static String USERNAME;
+
+    public static final String LOGIN_PREFS = "LoginPrefs";
 }

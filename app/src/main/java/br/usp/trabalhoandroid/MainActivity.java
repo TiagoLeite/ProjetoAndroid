@@ -1,5 +1,7 @@
 package br.usp.trabalhoandroid;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                     new DrawerItem("Perfil", DrawerItem.TYPE_TITLE),
                     new DrawerItem("Exercícios", DrawerItem.TYPE_TITLE),
                     new DrawerItem("Configurações", DrawerItem.TYPE_TITLE),
+                    new DrawerItem("Sair", DrawerItem.TYPE_TITLE)
             };
         RecyclerDrawerAdapter mAdapter = new RecyclerDrawerAdapter(myDataset);
         recyclerViewDrawer.setAdapter(mAdapter);
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentMap.put("Exercícios", new ExerciseFragment());
         fragmentMap.put("Perfil", new ProfileFragment());
         fragmentMap.put("Configurações", new SettingsFragment());
+        fragmentMap.put("Sair", new SettingsFragment());
         drawerLayout.openDrawer(GravityCompat.START);
 
     }
@@ -127,6 +132,14 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view)
                 {
+                    Log.d("onCLick", itemText);
+                    if(itemText.equals("Sair")){
+                        SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(Constants.LOGIN_PREFS, MODE_PRIVATE).edit();
+                        editor.clear();
+                        editor.commit();
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                    }
                     if(lastClicked != null)
                     {
                         ((TextView)lastClicked).setTextColor(getResources().getColor(R.color.colorPrimary));

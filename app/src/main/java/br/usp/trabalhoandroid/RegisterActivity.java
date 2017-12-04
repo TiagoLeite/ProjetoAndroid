@@ -2,6 +2,7 @@ package br.usp.trabalhoandroid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -34,11 +35,13 @@ public class RegisterActivity extends AppCompatActivity {
     Button btnRegister;
     Context context;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        final SharedPreferences.Editor editor = getSharedPreferences(Constants.LOGIN_PREFS, MODE_PRIVATE).edit();
         context = this;
         etName = (EditText) findViewById(R.id.etName);
         etBirthDateDay = (EditText) findViewById(R.id.etBirthDateDay);
@@ -148,7 +151,15 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onResponse(String response) {
                                     if(response.contains("Registration successfully!")){
                                         Toast.makeText(context, "Registration successfully. Welcome!", Toast.LENGTH_LONG).show();
+                                        editor.putString("username", Constants.USERNAME);
+                                        editor.putString("email", Constants.EMAIL);
+                                        editor.putString("name", Constants.NAME);
+                                        editor.putString("password", Constants.PASSWORD);
+                                        editor.putString("birth", Constants.BIRTH);
+                                        editor.putString("gender", Constants.GENDER);
+                                        editor.apply();
                                         Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+
                                         startActivity(intent);
                                     }
                                     else

@@ -2,6 +2,7 @@ package br.usp.trabalhoandroid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -36,8 +37,21 @@ public class LoginActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        final SharedPreferences prefs = getApplicationContext().getSharedPreferences(Constants.LOGIN_PREFS, MODE_PRIVATE);
+        final SharedPreferences.Editor editor = prefs.edit();
 
         context = this;
+
+        if(prefs.getString("username", null) != null){
+            Log.d("username", prefs.getString("username", null));
+            Constants.USERNAME = prefs.getString("username", null);
+            Constants.PASSWORD = prefs.getString("password", null);
+            Constants.NAME = prefs.getString("name", null);
+            Constants.EMAIL = prefs.getString("email", null);
+            Constants.BIRTH = prefs.getString("birth", null);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            LoginActivity.this.startActivity(intent);
+        }
 
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
@@ -85,6 +99,14 @@ public class LoginActivity extends AppCompatActivity{
                                                 Constants.BIRTH = jsonResponse.getString("birth");
                                                 Constants.USERNAME = jsonResponse.getString("username");
                                                 Constants.PASSWORD = jsonResponse.getString("password");
+
+                                                editor.putString("username", Constants.USERNAME);
+                                                editor.putString("email", Constants.EMAIL);
+                                                editor.putString("name", Constants.NAME);
+                                                editor.putString("password", Constants.PASSWORD);
+                                                editor.putString("birth", Constants.BIRTH);
+                                                editor.putString("gender", Constants.GENDER);
+                                                editor.apply();
 
                                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                 LoginActivity.this.startActivity(intent);
