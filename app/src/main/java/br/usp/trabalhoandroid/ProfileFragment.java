@@ -1,18 +1,16 @@
 package br.usp.trabalhoandroid;
 
 
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,15 +28,19 @@ import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
 
-    public static final int CAMERA_PIC_REQUEST = 1;
+    public static final int STORAGE_REQUEST = 1;
     ImageView imgProfilePic;
     Button btnChangePic, btnEditProfile;
+    private boolean permissionToWriteAccepted = false;
+    private String [] permissions = {"android.permission.WRITE_EXTERNAL_STORAGE"};
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         getActivity().setTitle(getResources().getString(R.string.profile));
+
+        ActivityCompat.requestPermissions(getActivity(), permissions, STORAGE_REQUEST);
 
         TextView tvName = (TextView) view.findViewById(R.id.tvName);
         TextView tvEmail = (TextView) view.findViewById(R.id.tvEmail);
@@ -81,14 +83,14 @@ public class ProfileFragment extends Fragment {
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, CAMERA_PIC_REQUEST);
+            startActivityForResult(takePictureIntent, STORAGE_REQUEST);
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         switch (requestCode) {
-            case CAMERA_PIC_REQUEST:
+            case STORAGE_REQUEST:
                 if (resultCode == RESULT_OK) {
                     Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
                     saveToInternalStorage(thumbnail);
@@ -129,6 +131,20 @@ public class ProfileFragment extends Fragment {
         }
         catch (FileNotFoundException e)
         {
+
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case STORAGE_REQUEST:
+                permissionToWriteAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!permissionToWriteAccepted ){
 
         }
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -74,29 +75,29 @@ public class EditProfileActivity extends AppCompatActivity {
         btSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String name = etName.getText().toString();
-                final String birthDate = etBirthDateDay.getText().toString() + "/" + etBirthDateMonth.getText().toString() + "/" + etBirthDateYear.getText().toString();
-                final String email = etEmail.getText().toString();
-                final String password = etPassword.getText().toString();
-                final String confirmPassword = etConfirmPassword.getText().toString();
-                final String gender;
-                if (rbSexM.isChecked())
-                    gender = "M";
-                else
-                    gender = "F";
-                Constants.NAME = name;
-                Constants.EMAIL = email;
-                Constants.PASSWORD = password;
-                Constants.BIRTH = birthDate;
-                Constants.GENDER = gender;
+                if(checkInput()) {
+                    final String name = etName.getText().toString();
+                    final String birthDate = etBirthDateDay.getText().toString() + "/" + etBirthDateMonth.getText().toString() + "/" + etBirthDateYear.getText().toString();
+                    final String email = etEmail.getText().toString();
+                    final String password = etPassword.getText().toString();
+                    final String confirmPassword = etConfirmPassword.getText().toString();
+                    final String gender;
+                    if (rbSexM.isChecked())
+                        gender = "M";
+                    else
+                        gender = "F";
+                    Constants.NAME = name;
+                    Constants.EMAIL = email;
+                    Constants.PASSWORD = password;
+                    Constants.BIRTH = birthDate;
+                    Constants.GENDER = gender;
 
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.UPDATE_URL,
-                        new Response.Listener<String>()
-                        {
-                            @Override
-                            public void onResponse(String response) {
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, Constants.UPDATE_URL,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
                                     Log.d("onResponse", "Entrou");
-                                    if(response.contains("Update successfully!")) {
+                                    if (response.contains("Update successfully!")) {
 
                                         editor.putString("email", Constants.EMAIL);
                                         editor.putString("name", Constants.NAME);
@@ -110,45 +111,87 @@ public class EditProfileActivity extends AppCompatActivity {
                                         Toast.makeText(context, "Update successfully!",
                                                 Toast.LENGTH_LONG).show();
 
-                                    } else if(response.contains("There was a error during update. Please, try again.")) {
+                                    } else if (response.contains("There was a error during update. Please, try again.")) {
                                         Toast.makeText(context, "Error during update. Please, try again later.",
                                                 Toast.LENGTH_LONG).show();
                                         Log.d("Error", response);
                                         if (response.contains("5"))
                                             Toast.makeText(context, "555", Toast.LENGTH_LONG).show();
-                                    }
-                                    else if(response.contains("ID saved")) {
+                                    } else if (response.contains("ID saved")) {
                                         Toast.makeText(context, "ID SAVDE", Toast.LENGTH_LONG).show();
 
                                     }
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
+                                    Log.d("Error", error.toString());
+                                }
                             }
-                        },
-                        new Response.ErrorListener()
-                        {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
-                                Log.d("Error", error.toString());
-                            }
+                    ) {
+                        @Override
+                        protected Map<String, String> getParams() {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put(Constants.KEY_NAME, Constants.NAME);
+                            params.put(Constants.KEY_EMAIL, Constants.EMAIL);
+                            params.put(Constants.KEY_BIRTH, Constants.BIRTH);
+                            params.put(Constants.KEY_GENDER, Constants.GENDER);
+                            params.put(Constants.KEY_PASSWORD, Constants.PASSWORD);
+                            params.put(Constants.KEY_USERNAME, Constants.USERNAME);
+                            return params;
                         }
-                ) {
-                    @Override
-                    protected Map<String, String> getParams()
-                    {
-                        Map<String, String>  params = new HashMap<String, String>();
-                        params.put(Constants.KEY_NAME, Constants.NAME);
-                        params.put(Constants.KEY_EMAIL, Constants.EMAIL);
-                        params.put(Constants.KEY_BIRTH, Constants.BIRTH);
-                        params.put(Constants.KEY_GENDER, Constants.GENDER);
-                        params.put(Constants.KEY_PASSWORD, Constants.PASSWORD);
-                        params.put(Constants.KEY_USERNAME, Constants.USERNAME);
-                        return params;
-                    }
-                };
-                RequestQueue queue = Volley.newRequestQueue(EditProfileActivity.this);
-                queue.add(stringRequest);
+                    };
+                    RequestQueue queue = Volley.newRequestQueue(EditProfileActivity.this);
+                    queue.add(stringRequest);
+                }else Toast.makeText(context, getResources().getString(R.string.check), Toast.LENGTH_LONG).show();
             }
         });
 
+    }
+
+    private boolean checkInput(){
+
+        if(!checkField(etName)) return false;
+        if(!checkField(etBirthDateDay)) return false;
+        if(!checkField(etBirthDateMonth)) return false;
+        if(!checkField(etBirthDateYear)) return false;
+        if(!checkField(etEmail)) return false;
+        if(!checkField(etPassword)) return false;
+        if(!checkField(etConfirmPassword)) return false;
+        if(!checkRadioButtons()) return false;
+
+        if(!checkPassword()) {
+            etConfirmPassword.setError(getString(R.string.wrongPasswords));
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkRadioButtons(){
+        if(!rbSexF.isChecked() && !rbSexM.isChecked()) return false;
+
+        return true;
+    }
+
+    private boolean checkField(EditText et){
+        String s = et.getText().toString();
+
+        if(TextUtils.isEmpty(s)){
+            et.setError(getString(R.string.emptyField));
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean checkPassword(){
+        String password = etPassword.getText().toString();
+        String confirmPassword = etConfirmPassword.getText().toString();
+
+        boolean check = password.equals(confirmPassword);
+        return check;
     }
 }

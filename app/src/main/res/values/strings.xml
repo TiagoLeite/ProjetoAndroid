@@ -5,7 +5,7 @@
     <string name="name">Name:</string>
     <string name="birthdate">Date of Birth:</string>
     <string name="sex">Sex:</string>
-    <string name="emasil">Email:</string>
+    <string name="email">Email:</string>
     <string name="confirmPassword">Confirm Password:</string>
     <string name="username">Username:</string>
     <string name="wrongPasswords">Passwords don\'t match</string>
