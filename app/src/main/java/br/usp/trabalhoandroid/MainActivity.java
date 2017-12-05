@@ -2,10 +2,15 @@ package br.usp.trabalhoandroid;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.FloatRange;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -25,10 +30,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TVWelcome = findViewById(R.id.TVWelcome);
-        TVWelcome.setText("Welcome, " + Constants.NAME);
+        TVWelcome.setText(getResources().getString(R.string.welcome) + " "+Constants.NAME);
 
         recyclerViewDrawer = findViewById(R.id.drawer_recycler_view);
         recyclerViewDrawer.setHasFixedSize(true);
@@ -59,10 +69,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewDrawer.setLayoutManager(llm);
         DrawerItem[] myDataset = new DrawerItem[]
             {
-                    new DrawerItem("Perfil", DrawerItem.TYPE_TITLE),
-                    new DrawerItem("Exercícios", DrawerItem.TYPE_TITLE),
-                    new DrawerItem("Configurações", DrawerItem.TYPE_TITLE),
-                    new DrawerItem("Sair", DrawerItem.TYPE_TITLE)
+                    new DrawerItem(getResources().getString(R.string.profile), DrawerItem.TYPE_TITLE),
+                    new DrawerItem(getResources().getString(R.string.exercises), DrawerItem.TYPE_TITLE),
+                    new DrawerItem(getResources().getString(R.string.settings), DrawerItem.TYPE_TITLE),
+                    new DrawerItem(getResources().getString(R.string.sair), DrawerItem.TYPE_TITLE)
             };
         RecyclerDrawerAdapter mAdapter = new RecyclerDrawerAdapter(myDataset);
         recyclerViewDrawer.setAdapter(mAdapter);
@@ -77,17 +87,17 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentMap = new HashMap<>();
 
-        fragmentMap.put("Exercícios", new ExerciseFragment());
-        fragmentMap.put("Perfil", new ProfileFragment());
-        fragmentMap.put("Configurações", new SettingsFragment());
-        fragmentMap.put("Sair", new SettingsFragment());
+        fragmentMap.put(getResources().getString(R.string.exercises), new ExerciseFragment());
+        fragmentMap.put(getResources().getString(R.string.profile), new ProfileFragment());
+        fragmentMap.put(getResources().getString(R.string.settings), new SettingsFragment());
+        fragmentMap.put(getResources().getString(R.string.sair), new SettingsFragment());
         drawerLayout.openDrawer(GravityCompat.START);
 
-        View a = findViewById(R.id.drawer_view);
-        profilePic = (ImageView) a.findViewById(R.id.profilePicIcon);
-        if(profilePic == null) Log.d("ERROR", "AAAAA");
-        loadImageFromStorage("/data/user/0/br.usp.trabalhoandroid/app_imageDir");
+        profilePic = findViewById(R.id.profilePicIcon);
 
+        loadImageFromStorage();
+
+        replaceFragment(fragmentMap.get(getResources().getString(R.string.exercises)));
     }
 
     private void replaceFragment(Fragment fragment)
@@ -145,8 +155,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view)
                 {
-                    Log.d("onCLick", itemText);
-                    if(itemText.equals("Sair")){
+                    if(itemText.equals(getResources().getString(R.string.sair)))
+                    {
                         SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(Constants.LOGIN_PREFS, MODE_PRIVATE).edit();
                         editor.clear();
                         editor.commit();
@@ -164,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                     drawerLayout.closeDrawers();
                     ((TextView)view).setTextColor(getResources().getColor(R.color.colorPrimary));
                     ((TextView)view).setTypeface(Typeface.DEFAULT_BOLD);
-                    view.setBackgroundColor(getResources().getColor(R.color.gray));
+                    view.setBackgroundColor(getResources().getColor(R.color.lightGray));
                 }
             });
         }
@@ -180,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
             ViewHolderMenu(View v)
             {
                 super(v);
-                mTextView = (TextView) v.findViewById(R.id.tv_row_title);
+                mTextView = v.findViewById(R.id.tv_row_title);
             }
         }
     }
@@ -206,18 +216,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void loadImageFromStorage(String path)
+    private void loadImageFromStorage()
     {
-
-        try {
-            File f=new File(path, Constants.USERNAME + ".jpg");
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-            profilePic.setImageBitmap(b);
-        }
-        catch (FileNotFoundException e)
-        {
-
-        }
-
+        if (profilePic == null)
+            Log.d("debug", "iame NULL");
+        File mypath = new File(Environment.getExternalStorageDirectory(),Constants.USERNAME + ".jpg");
+        Picasso.with(this).load(mypath).into(profilePic);
     }
+
 }

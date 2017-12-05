@@ -27,9 +27,17 @@
     <string name="recording">Gravando...</string>
     <string name="recorded">Gravado com sucesso</string>
     <string name="training">Treino</string>
-    <string name="profile">PERFIL</string>
+    <string name="profile">Perfil</string>
     <string name="changeProfilePic">TROCAR FOTO DE PERFIL</string>
     <string name="editProfile">EDITAR PERFIL</string>
     <string name="saveChanges">SALVAR MUDANÇAS</string>
     <string name="captureMovement">CAPTURAR MOVIMENTO</string>
+    <string name="sair">Sair</string>
+    <string name="exercises">Exercícios</string>
+    <string name="settings">Configurações</string>
+    <string name="welcome">Bem-vindo,</string>
+    <string name="wel_suc">Registrado com sucesso. Bem-vindo!</string>
+    <string name="error">Houve um erro na conexão. Tente novamente.</string>
+    <string name="check">Por favor, marque os campos</string>
+    <string name="denied">Permissão negada</string>
 </resources>

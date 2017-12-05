@@ -58,7 +58,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
     {
         super.onCreateView(inflater, container, savedInstanceState);
         root = inflater.inflate(R.layout.exercise_fragment, container, false);
-        getActivity().setTitle("Exercícios");
+        getActivity().setTitle(getResources().getString(R.string.exercises));
         setupFab();
         setupRecyclerView();
 
@@ -255,7 +255,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 //TODO: handle here
             } else {
-                Toast.makeText(getActivity(), "PERMISSION_DENIED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.denied), Toast.LENGTH_SHORT).show();
             }
         }
     }

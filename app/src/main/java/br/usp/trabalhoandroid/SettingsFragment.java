@@ -1,17 +1,25 @@
 package br.usp.trabalhoandroid;
 
 import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TimePicker;
 
+import java.util.Locale;
 
 public class SettingsFragment extends Fragment
 {
@@ -21,10 +29,8 @@ public class SettingsFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         root = inflater.inflate(R.layout.settings_fragment, container, false);
-        getActivity().setTitle("Configurações");
-
+        getActivity().setTitle(getResources().getString(R.string.settings));
         setup();
-
         return root;
     }
 

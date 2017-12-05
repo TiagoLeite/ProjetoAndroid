@@ -151,7 +151,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(String response) {
                                     if(response.contains("Registration successfully!")){
-                                        Toast.makeText(context, "Registration successfully. Welcome!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(context, getResources().getString(R.string.wel_suc), Toast.LENGTH_LONG).show();
                                         editor.putString("username", Constants.USERNAME);
                                         editor.putString("email", Constants.EMAIL);
                                         editor.putString("name", Constants.NAME);
@@ -169,7 +169,7 @@ public class RegisterActivity extends AppCompatActivity {
                             }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(context, "There was a connection error. Please, try again.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, getResources().getString(R.string.error), Toast.LENGTH_LONG).show();
                         }
                     }){
                         @Override
@@ -188,7 +188,7 @@ public class RegisterActivity extends AppCompatActivity {
                     MySingleton.getInstance(context).addToRequestQueue(stringRequest);
 
                 } else {
-                    Toast.makeText(context, "Please, check the fields.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, getResources().getString(R.string.check), Toast.LENGTH_LONG).show();
                 }
             }
         });

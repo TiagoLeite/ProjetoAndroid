@@ -33,15 +33,12 @@ public class ProfileFragment extends Fragment {
     public static final int CAMERA_PIC_REQUEST = 1;
     ImageView imgProfilePic;
     Button btnChangePic, btnEditProfile;
-    final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/picFolder/";
-    //TextView tvName;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        getActivity().setTitle("Perfil");
+        getActivity().setTitle(getResources().getString(R.string.profile));
 
         TextView tvName = (TextView) view.findViewById(R.id.tvName);
         TextView tvEmail = (TextView) view.findViewById(R.id.tvEmail);
@@ -61,7 +58,7 @@ public class ProfileFragment extends Fragment {
         btnEditProfile = (Button) view.findViewById(R.id.btnEditProfile);
         btnChangePic = (Button) view.findViewById(R.id.btnChangeProfilePic);
 
-        loadImageFromStorage("/data/user/0/br.usp.trabalhoandroid/app_imageDir");
+        loadImageFromStorage(Environment.getExternalStorageDirectory());
 
         btnChangePic.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,16 +97,14 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private String saveToInternalStorage(Bitmap bitmapImage){
-        ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        Log.d("DIR: ", directory.getPath());
-        // Create imageDir
-        File mypath=new File(directory,Constants.USERNAME + ".jpg");
+    private void saveToInternalStorage(Bitmap bitmapImage)
+    {
+        File mypath = new File(Environment.getExternalStorageDirectory(),Constants.USERNAME + ".jpg");
 
         FileOutputStream fos = null;
-        try {
+
+        try
+        {
             fos = new FileOutputStream(mypath);
             // Use the compress method on the BitMap object to write image to the OutputStream
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
@@ -122,10 +117,9 @@ public class ProfileFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-        return directory.getAbsolutePath();
     }
 
-    private void loadImageFromStorage(String path)
+    private void loadImageFromStorage(File path)
     {
 
         try {

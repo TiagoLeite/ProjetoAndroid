@@ -7,11 +7,14 @@
     android:background="@color/colorPrimary"
     android:id="@+id/drawer_header">
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="150dp"
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profilePicIcon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
         android:src="@drawable/default_profile_pic"
-        android:paddingLeft="20dp"
-        android:id="@+id/profilePicIcon"/>
+        app:border_color="@color/white"
+        app:border_width="1dp" />
 
 </LinearLayout>
