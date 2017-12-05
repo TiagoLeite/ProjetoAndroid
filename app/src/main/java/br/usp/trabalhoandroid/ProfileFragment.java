@@ -95,6 +95,7 @@ public class ProfileFragment extends Fragment {
                     Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
                     saveToInternalStorage(thumbnail);
                     imgProfilePic.setImageBitmap(thumbnail);
+                    ((MainActivity)getActivity()).loadImageFromStorage();
                 }
         }
     }

@@ -327,7 +327,9 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         Log.d("debug", this.getClass().toString()+"PAUSED");
         if(isRecording)
             stopRecording();
-        //mSensorManager.unregisterListener(this, mAccelerometer);
+
+        saveExercises(exerciseList, "exercises");
+
     }
 
     public void setExerciseList(List<AppPair<Exercise, Exercise>> exerciseList) {
