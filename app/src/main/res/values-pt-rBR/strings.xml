@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Trabalho Android</string>
+    <string name="app_name">Move!</string>
     <string name="password">Senha:</string>
     <string name="register">CADASTRE-SE</string>
     <string name="name">Nome:</string>
