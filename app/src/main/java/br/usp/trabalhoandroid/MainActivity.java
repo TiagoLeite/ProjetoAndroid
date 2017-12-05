@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadImageFromStorage()
+    public void loadImageFromStorage()
     {
         if (profilePic == null)
             Log.d("debug", "iame NULL");
