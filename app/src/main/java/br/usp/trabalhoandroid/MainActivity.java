@@ -216,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private class DrawerItem
     {
         public static final short TYPE_TITLE = 0;

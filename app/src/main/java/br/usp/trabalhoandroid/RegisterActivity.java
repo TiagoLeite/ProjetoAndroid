@@ -160,8 +160,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         editor.putString("gender", Constants.GENDER);
                                         editor.apply();
                                         Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-
                                         startActivity(intent);
+                                        finish();
                                     }
                                     else
                                         Toast.makeText(context, response.toString(), Toast.LENGTH_LONG).show();

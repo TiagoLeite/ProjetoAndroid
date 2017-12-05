@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity{
             Constants.GENDER = prefs.getString("gender", null);
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             LoginActivity.this.startActivity(intent);
+            finish();
         }
 
         etUsername = (EditText) findViewById(R.id.etUsername);
@@ -111,6 +112,8 @@ public class LoginActivity extends AppCompatActivity{
 
                                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                                 LoginActivity.this.startActivity(intent);
+                                                finish();
+
 
                                             } else {
                                                 if(!jsonResponse.getBoolean("usernameExists"))
