@@ -77,10 +77,10 @@ public class LoginActivity extends AppCompatActivity{
                 Constants.USERNAME = username;
                 Constants.PASSWORD = password;
                 if(username.length() == 0)
-                    Toast.makeText(context, "Please, insert a valid username.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, getResources().getString(R.string.valid_user), Toast.LENGTH_LONG).show();
                 else{
                     if(password.length() == 0)
-                        Toast.makeText(context, "Please, insert a valid password.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, getResources().getString(R.string.valid_pass), Toast.LENGTH_LONG).show();
                     else{
                         // Login Request
                         // RequestQueue queue = Volley.newRequestQueue(context);
@@ -114,10 +114,10 @@ public class LoginActivity extends AppCompatActivity{
 
                                             } else {
                                                 if(!jsonResponse.getBoolean("usernameExists"))
-                                                    Toast.makeText(context, "Wrong password. Please, try again.", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(context, getResources().getString(R.string.wrong_pass), Toast.LENGTH_LONG).show();
                                                 else
-                                                    Toast.makeText(context, "Wrong username and/or password. " +
-                                                            "Please, try again.", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(context, getResources().getString(R.string.wrong) +
+                                                            getResources().getString(R.string.try_again), Toast.LENGTH_LONG).show();
                                             }
                                         } catch (JSONException e) {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);

@@ -24,7 +24,7 @@
     <string name="exercise">Exercício</string>
     <string name="new_exercise">Novo exercício</string>
     <string name="cancel">Cancelar</string>
-    <string name="recording">Gravando...</string>
+    <string name="recording">Gravando…</string>
     <string name="recorded">Gravado com sucesso</string>
     <string name="training">Treino</string>
     <string name="profile">Perfil</string>
@@ -40,4 +40,9 @@
     <string name="error">Houve um erro na conexão. Tente novamente.</string>
     <string name="check">Por favor, marque os campos</string>
     <string name="denied">Permissão negada</string>
+    <string name="valid_user">Nome inválido</string>
+    <string name="valid_pass">Senha inválida</string>
+    <string name="try_again">Insira uma senha válida</string>
+    <string name="wrong">Nome ou senha errados.</string>
+    <string name="max">Máximo: 12 caracteres</string>
 </resources>

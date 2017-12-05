@@ -120,6 +120,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingRight="20dp"
+        android:visibility="gone"
         android:paddingBottom="40dp">
 
         <TextView

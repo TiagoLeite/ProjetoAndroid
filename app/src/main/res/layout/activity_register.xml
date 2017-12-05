@@ -175,7 +175,7 @@
                 android:id="@+id/etPasswordRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Maximum: 12 characters"
+                android:hint="@string/max"
                 android:inputType="textPassword"
                 tools:maxLength="12" />
 
@@ -197,8 +197,8 @@
                 android:id="@+id/etConfirmPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Maximum: 12 characters"
-                android:inputType="textPassword|textVisiblePassword"
+                android:hint="@string/max"
+                android:inputType="textPassword"
                 tools:maxLength="12" />
 
         </LinearLayout>
