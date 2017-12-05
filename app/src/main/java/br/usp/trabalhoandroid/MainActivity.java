@@ -85,6 +85,28 @@ public class MainActivity extends AppCompatActivity {
         if(actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true);
 
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                loadImageFromStorage();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
+
         fragmentMap = new HashMap<>();
 
         fragmentMap.put(getResources().getString(R.string.exercises), new ExerciseFragment());
@@ -92,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentMap.put(getResources().getString(R.string.settings), new SettingsFragment());
         fragmentMap.put(getResources().getString(R.string.sair), new SettingsFragment());
         drawerLayout.openDrawer(GravityCompat.START);
-
         profilePic = findViewById(R.id.profilePicIcon);
 
         loadImageFromStorage();
