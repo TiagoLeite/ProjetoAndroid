@@ -179,7 +179,6 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         }
         catch (Exception e)
         {
-            Log.d("debug", e.getMessage());
             return new ArrayList<>();
         }
     }
@@ -197,7 +196,7 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         }
         catch (Exception e)
         {
-            Log.d("debug", e.getMessage());
+
         }
     }
 
@@ -224,12 +223,10 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
         try
         {
             mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-            Log.d("debug", "STARTED REC");
             return true;
         }
         catch (Exception e)
         {
-            Log.d("debug", e.getMessage() + e.getCause());
             return false;
         }
     }
@@ -279,7 +276,6 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
             series[1][k] = (Double.parseDouble(tokens[1])) / 10f;
             series[2][k++] = (Double.parseDouble(tokens[2])) / 10f;
         }
-        Log.d("debug", "size of " + fileName + ": " + k);
         return series;
     }
 
@@ -316,7 +312,6 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
 
     private void stopRecordSensorValues()
     {
-        Log.d("debug", "Stop REC");
         mSensorManager.unregisterListener(this, mAccelerometer);
     }
 
@@ -369,7 +364,6 @@ public class ExerciseFragment extends Fragment implements SensorEventListener
                     pos++;
                 }
             }
-            Log.d("debug", this.getClass().toString()+"REsult");
         }
     }
 }
